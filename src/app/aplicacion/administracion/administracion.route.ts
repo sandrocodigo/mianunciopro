@@ -11,8 +11,8 @@ export default [
         path: '',
         component: Administracion,
         children: [
-            { path: '', component: Anuncios, },
-            { path: 'anuncios', component: Anuncios, },
+            { path: '', loadChildren: () => import('./anuncios/anuncios.route') },
+            { path: 'anuncios', loadChildren: () => import('./anuncios/anuncios.route') },
             { path: 'perfil', component: Perfil, },
             { path: 'configuracion', component: Configuracion, },
         ]

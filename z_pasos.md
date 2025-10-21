@@ -29,7 +29,12 @@ ng g c --standalone aplicacion/portal/contacto
 ng g c --standalone aplicacion/administracion
 
 ng g c --standalone aplicacion/administracion/perfil
+
 ng g c --standalone aplicacion/administracion/anuncios
+ng g c --standalone aplicacion/administracion/anuncios/anuncio-lista
+ng g c --standalone aplicacion/administracion/anuncios/anuncio-form
+ng g c --standalone aplicacion/administracion/anuncios/anuncio-detalle
+
 ng g c --standalone aplicacion/administracion/configuracion
 
 
