@@ -15,5 +15,5 @@ import { MatMenuModule } from '@angular/material/menu';
   styleUrl: './portal.css'
 })
 export class Portal {
-
+  protected readonly currentYear = new Date().getFullYear();
 }
