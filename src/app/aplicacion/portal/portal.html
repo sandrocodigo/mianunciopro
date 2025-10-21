@@ -1,0 +1,20 @@
+<div
+    class="flex flex-wrap items-center from-lime-500 via-lime-850 to-lime-950 text-white rounded-lg lg:rounded-r-lg p-4">
+    <h2 class="titulo">
+        Portal de miAnuncioPro
+    </h2>
+    <div class="w-full flex flex-wrap space-x-4 space-y-2 mt-2 sm:space-y-0">
+
+        <a [routerLink]="'inicio'" class="flex items-center text-amber-500 hover:text-gray-300">
+            <span class="material-icons">inventory</span>
+            <span class="ml-1">Inicio</span>
+        </a>
+
+        <a [routerLink]="'contacto'" class="flex items-center text-amber-500 hover:text-gray-300">
+            <span class="material-icons">category</span>
+            <span class="ml-1">Contacto</span>
+        </a>
+
+    </div>
+</div>
+<router-outlet></router-outlet>
