@@ -19,8 +19,6 @@ npm i ngx-barcode6
 npm i ngx-image-zoom
 npm i --D @types/file-saver
 
-
-
 ## PORTAL
 ng g c --standalone aplicacion/portal
 ng g c --standalone aplicacion/portal/inicio
@@ -30,76 +28,9 @@ ng g c --standalone aplicacion/portal/contacto
 ## ADMINISTRACION
 ng g c --standalone aplicacion/administracion
 
-ng g c --standalone aplicacion/administracion/estadisticas
-
-
-ng g c --standalone aplicacion/administracion/egresos
-ng g c --standalone aplicacion/administracion/egresos/egreso-filtro
-
-ng g c --standalone aplicacion/administracion/ingresos
-ng g c --standalone aplicacion/administracion/ingresos/ingreso-items
-
-
-
-ng g c --standalone aplicacion/administracion/ajustes
-ng g c --standalone aplicacion/administracion/ajustes/usuarios/usuario-registro
-
-
-
-ng g c --standalone aplicacion/administracion/tarifas
-ng g c --standalone aplicacion/administracion/tarifas/tarifa-lista
-ng g c --standalone aplicacion/administracion/tarifas/tarifa-form
-
-
-ng g c --standalone aplicacion/administracion/productos
-ng g c --standalone aplicacion/administracion/productos/producto-lista2
-ng g c --standalone aplicacion/administracion/productos/producto-venta
-ng g c --standalone aplicacion/administracion/productos/producto-barra
-ng g c --standalone aplicacion/administracion/productos/producto-imprimir
-
-ng g c --standalone aplicacion/administracion/ajustes
-ng g c --standalone aplicacion/administracion/ajustes/usuarios/permiso-acceso
-ng g c --standalone aplicacion/administracion/ajustes/usuarios/permiso-operacion
-
-ng g c --standalone aplicacion/administracion/buscadores
-ng g c --standalone aplicacion/administracion/buscadores/buscador-producto
-
-## CLIENTE
-ng g c --standalone aplicacion/administracion/clientes
-ng g c --standalone aplicacion/administracion/clientes/cliente-lista
-ng g c --standalone aplicacion/administracion/clientes/cliente-form
-
-## GESTION
-ng g c --standalone aplicacion/administracion/gestion
-ng g c --standalone aplicacion/administracion/gestion/gestion-ingreso
-ng g c --standalone aplicacion/administracion/gestion/gestion-ingreso/gestion-ingreso-form
-
-ng g c --standalone aplicacion/administracion/gestion/gestion-egreso
-ng g c --standalone aplicacion/administracion/gestion/gestion-egreso/gestion-egreso-form
-
-ng g c --standalone aplicacion/administracion/gestion/gestion-producto
-
-ng g c --standalone aplicacion/administracion/gestion/gestion-buscar
-
-ng g c --standalone aplicacion/administracion/personal
-ng g c --standalone aplicacion/administracion/personal/personal-lista
-ng g c --standalone aplicacion/administracion/personal/personal-form
-ng g c --standalone aplicacion/administracion/personal/personal-detalle
-ng g c --standalone aplicacion/administracion/personal/personal-jornada
-ng g c --standalone aplicacion/administracion/personal/personal-pago
-
-ng g c --standalone aplicacion/administracion/reportes/reporte6
-
-ng g c --standalone aplicacion/sistema/alerta
-
-ng g c --standalone aplicacion/sistema/mensaje
-
-
-ng g c --standalone aplicacion/sitio/comidas
-ng g c --standalone aplicacion/sitio/comidas/comida-lista
-ng g c --standalone aplicacion/sitio/comidas/comida-detalle
-
-
+ng g c --standalone aplicacion/administracion/perfil
+ng g c --standalone aplicacion/administracion/anuncios
+ng g c --standalone aplicacion/administracion/configuracion
 
 
 ## RESPONSIVO

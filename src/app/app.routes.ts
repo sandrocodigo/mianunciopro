@@ -2,4 +2,5 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     { path: '', loadChildren: () => import('./aplicacion/portal/portal.route') },
+    { path: 'administracion', loadChildren: () => import('./aplicacion/administracion/administracion.route') },
 ];

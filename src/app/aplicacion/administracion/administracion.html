@@ -1,0 +1,74 @@
+<div class="min-h-screen bg-slate-950 text-slate-100">
+    <div class="relative overflow-hidden">
+        <div class="pointer-events-none absolute inset-0 opacity-60">
+            <div class="absolute -top-32 left-16 h-96 w-96 rounded-full bg-emerald-600/60 blur-3xl"></div>
+            <div class="absolute -bottom-24 right-0 h-[420px] w-[420px] rounded-full bg-lime-500/40 blur-3xl"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="relative z-10">
+            <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-6 py-6">
+                <a [routerLink]="'/'" class="flex items-center space-x-2">
+                    <span
+                        class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 shadow-lg shadow-emerald-900/40">
+                        <span class="material-icons">storefront</span>
+                    </span>
+                    <div>
+                        <p class="text-sm tracking-wide text-emerald-300/80">miAnuncioPRO</p>
+                        <p class="text-lg font-semibold">Administracion</p>
+                    </div>
+                </a>
+
+                <nav class="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-300">
+                    <a [routerLink]="'anuncios'"
+                        class="flex items-center gap-1 rounded-full px-4 py-2 transition hover:bg-emerald-500/10 hover:text-emerald-200">
+                        <span class="material-icons text-base">inventory</span>
+                        <span>Anuncios</span>
+                    </a>
+                    <a [routerLink]="'perfil'"
+                        class="flex items-center gap-1 rounded-full px-4 py-2 transition hover:bg-emerald-500/10 hover:text-emerald-200">
+                        <span class="material-icons text-base">person</span>
+                        <span>Perfil</span>
+                    </a>
+                    <a [routerLink]="'configuracion'"
+                        class="flex items-center gap-1 rounded-full px-4 py-2 transition hover:bg-emerald-500/10 hover:text-emerald-200">
+                        <span class="material-icons text-base">settings</span>
+                        <span>Configuracion</span>
+                    </a>
+                    <button type="button"
+                        class="flex items-center gap-2 rounded-full border border-emerald-400/40 px-5 py-2 font-semibold text-emerald-200 transition hover:bg-emerald-500/10">
+                        <span class="material-icons text-base">favorite</span>
+                        Guardados
+                    </button>
+                </nav>
+
+                <div class="flex items-center gap-3">
+                    <button type="button"
+                        class="rounded-full border border-emerald-400/40 px-4 py-2 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-500/10">
+                        Ingresar
+                    </button>
+                    <button type="button"
+                        class="rounded-full bg-linear-to-r from-emerald-400 to-lime-300 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/50 transition hover:scale-[1.02]">
+                        Publicar anuncio
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-16 pt-4 lg:gap-14 lg:pb-24 lg:pt-8">
+            <router-outlet></router-outlet>
+        </main>
+
+    </div>
+
+    <div class="bg-slate-950/95 border-t border-white/5 px-6 py-8 text-sm text-slate-500">
+        <div class="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p>© miAnuncioPro. Todos los derechos reservados.</p>
+            <div class="flex flex-wrap gap-4">
+                <a [routerLink]="'/terminos'" class="transition hover:text-emerald-200">Términos</a>
+                <a [routerLink]="'/privacidad'" class="transition hover:text-emerald-200">Privacidad</a>
+                <a [routerLink]="'/soporte'" class="transition hover:text-emerald-200">Soporte</a>
+            </div>
+        </div>
+    </div>
+</div>
