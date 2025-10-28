@@ -1,0 +1,107 @@
+<section class="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-6 py-16 text-slate-100">
+  <div class="pointer-events-none absolute inset-0">
+    <div class="absolute -top-28 left-20 h-96 w-96 rounded-full bg-emerald-500/30 blur-3xl"></div>
+    <div class="absolute -bottom-44 right-0 h-[460px] w-[460px] rounded-full bg-lime-400/25 blur-3xl"></div>
+    <div class="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/10 blur-3xl"></div>
+  </div>
+
+  <div class="relative mx-auto w-full max-w-6xl">
+    <div
+      class="relative grid w-full grid-cols-1 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/70 shadow-2xl shadow-emerald-950/50 backdrop-blur-xl md:grid-cols-[1.05fr_0.95fr]">
+      <div class="flex flex-col gap-10 px-8 py-12 sm:px-12 lg:px-16">
+        <div class="flex flex-col gap-6">
+          <div class="flex items-center gap-4">
+            <span
+              class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-300 shadow-lg shadow-emerald-900/40">
+              <span class="material-icons text-2xl">encrypted</span>
+            </span>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300/70">miAnuncioPRO</p>
+              <h1 class="text-3xl font-semibold text-white sm:text-4xl">Recupera tu acceso seguro</h1>
+            </div>
+          </div>
+          <p class="max-w-xl text-sm leading-relaxed text-slate-300/80">
+            Te enviaremos un enlace cifrado para que restablezcas tu contraseña y vuelvas a controlar tus anuncios
+            con todo el estilo futurista del portal profesional.
+          </p>
+        </div>
+
+        @if (registroFormGroup) {
+          <form [formGroup]="registroFormGroup" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+            <div class="space-y-2">
+              <label class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200/80">Correo de recuperación</label>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="Ejemplo: email@gmail.com" formControlName="email" type="email" [required]="true"
+                  autocomplete="off">
+                <mat-icon matSuffix class="text-emerald-400">mail</mat-icon>
+                @if (registroFormGroup.get('email')!.hasError('required')) {
+                  <mat-error>Es necesario su correo</mat-error>
+                }
+                @if (registroFormGroup.get('email')!.hasError('email')) {
+                  <mat-error>Es necesario un correo valido</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="flex flex-col gap-4 pt-4">
+              <button type="submit"
+                class="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-linear-to-r from-emerald-400 via-emerald-500 to-lime-300 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/40 transition hover:-translate-y-0.5 hover:shadow-emerald-800/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900">
+                <span>Enviar instrucciones</span>
+                <span class="material-icons text-base transition-transform duration-150 group-hover:translate-x-1">key</span>
+              </button>
+
+              <button type="button" (click)="loginGoogle()"
+                class="inline-flex w-full items-center justify-center gap-3 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-100 transition hover:border-emerald-300/60 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900">
+                <svg class="h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img"
+                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+                  <path fill="currentColor"
+                    d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+                </svg>
+                <span>Verificar con Google</span>
+              </button>
+            </div>
+          </form>
+        }
+
+        <div class="flex items-center justify-between rounded-full border border-white/10 bg-white/5 px-6 py-4 text-sm text-slate-300">
+          <p class="font-medium text-slate-200/80">¿Recordaste tu contraseña?</p>
+          <button routerLink="/login"
+            class="rounded-full bg-linear-to-r from-emerald-400/90 to-lime-300/90 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-950 transition hover:from-emerald-300 hover:to-lime-200">
+            Ir al login
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="relative hidden flex-col justify-between gap-10 bg-linear-to-br from-emerald-500/20 via-emerald-500/10 to-lime-300/20 px-10 py-12 text-emerald-50 md:flex">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_45%)]"></div>
+        <div class="relative space-y-6">
+          <div class="inline-flex items-center gap-3 rounded-full border border-emerald-300/30 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-emerald-200/80">
+            <span class="material-icons text-base">shield_moon</span>
+            Protección activa
+          </div>
+          <h2 class="text-3xl font-semibold leading-snug text-white">Cada acceso es monitoreado en tiempo real.</h2>
+          <p class="text-sm leading-relaxed text-emerald-100/80">
+            Restauramos tu entrada al ecosistema miAnuncioPRO con capas de seguridad, autenticación reforzada y una
+            experiencia visual coherente con el portal profesional.
+          </p>
+        </div>
+        <div class="relative space-y-3 text-sm text-emerald-100/90">
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-base text-lime-200">check_circle</span>
+            Enlaces expiran de forma automática por tu seguridad.
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-base text-lime-200">check_circle</span>
+            Auditoría de accesos para cada movimiento sospechoso.
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-base text-lime-200">check_circle</span>
+            Equipo de soporte listo ante cualquier incidencia.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

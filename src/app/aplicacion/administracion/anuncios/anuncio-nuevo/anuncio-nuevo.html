@@ -1,0 +1,70 @@
+<div class="flex items-center justify-between py-4">
+    <div>
+        <h1 class="titulo" [animate.enter]="'fade-down'"> Nuevo Anuncio </h1>
+        <p class="subtitulo" [animate.enter]="'fade-right'">Selecciona la Categoria del Anuncio</p>
+    </div>
+    <div class="ml-auto">
+        <!--         <button [routerLink]="'nuevo'" [animate.enter]="'grow-in'" matFab extended matTooltip="Adicionar" type="button">
+            <mat-icon>add</mat-icon> Nuevo
+        </button> -->
+    </div>
+</div>
+
+
+<div class="flex flex-wrap gap-6 px-4">
+    <!-- Formulario -->
+    <div class="w-full md:w-1/2 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
+        <form *ngIf="registroFormGroup" (ngSubmit)="onSubmit()" [formGroup]="registroFormGroup">
+
+            <mat-form-field class="w-full">
+                <mat-label>Nombre</mat-label>
+                <input name="telefono" matInput placeholder="nombres" formControlName="nombres">
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-hint>Nombre Completo</mat-hint>
+                <mat-error *ngIf="registroControl && r.nombres.errors?.required">Requerido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-full mt-4">
+                <mat-label>Email</mat-label>
+                <input name="email" matInput placeholder="email" formControlName="email">
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-hint>Correo Electrónico</mat-hint>
+                <mat-error *ngIf="registroControl && r.email.errors?.required">Requerido</mat-error>
+                <mat-error *ngIf="registroControl && r.email.errors?.email">Incorrecto</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-full mt-4">
+                <mat-label>Teléfono</mat-label>
+                <input name="telefono" matInput placeholder="telefono" formControlName="telefono">
+                <mat-icon matSuffix>phone</mat-icon>
+                <mat-hint>Incluir código de área</mat-hint>
+                <mat-error *ngIf="registroControl && r.telefono.errors?.required">Requerido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-full mt-4">
+                <mat-label>Consulta</mat-label>
+                <input name="consulta" matInput placeholder="consulta" formControlName="consulta">
+                <mat-icon matSuffix>message</mat-icon>
+                <mat-hint>¿Cuál es su consulta?</mat-hint>
+                <mat-error *ngIf="registroControl && r.consulta.errors?.required">Requerido</mat-error>
+            </mat-form-field>
+
+            <div class="text-right mt-6">
+                <button color="primary" mat-flat-button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-md transition">
+                    Enviar
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Mensaje -->
+    <div
+        class="w-full md:w-1/2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 p-6 rounded-xl shadow-md text-lg">
+        <p class="leading-relaxed">
+            Escríbenos a: <span class="font-semibold text-blue-600 dark:text-blue-400">{{email}}</span>, si tienes
+            alguna duda o si quieres participar de este proyecto.
+        </p>
+    </div>
+</div>

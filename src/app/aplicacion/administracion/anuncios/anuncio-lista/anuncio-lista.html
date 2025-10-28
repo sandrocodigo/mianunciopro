@@ -1,1 +1,11 @@
-<p>anuncio-lista works!</p>
+<div class="flex items-center justify-between py-4">
+    <div>
+        <h1 class="titulo" [animate.enter]="'fade-down'"> Anuncios </h1>
+        <p class="subtitulo" [animate.enter]="'fade-right'">Gestion de Anuncios</p>
+    </div>
+    <div class="ml-auto">
+        <button [routerLink]="'nuevo'" [animate.enter]="'grow-in'" matFab extended matTooltip="Adicionar" type="button">
+            <mat-icon>add</mat-icon> Nuevo
+        </button>
+    </div>
+</div>

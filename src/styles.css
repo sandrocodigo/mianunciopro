@@ -10,7 +10,7 @@ body {
 
 @layer components {
   .titulo {
-    @apply text-3xl font-semibold bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 inline-block text-transparent bg-clip-text;
+    @apply text-3xl font-semibold bg-gradient-to-r from-emerald-300 via-emerald-500 to-lime-300 inline-block text-transparent bg-clip-text;
   }
   .subtitulo {
     @apply text-sm text-gray-500 dark:text-gray-300;

@@ -30,18 +30,33 @@
             <span class="material-icons text-base">call</span>
             <span>Contacto</span>
           </a>
+
+          @if (usuario) {
           <button type="button" [routerLink]="'administracion'"
             class="flex items-center gap-2 rounded-full border border-emerald-400/40 px-5 py-2 font-semibold text-emerald-200 transition hover:bg-emerald-500/10">
-            <span class="material-icons text-base">folder_managed</span>
+            <span class="material-icons text-base">settings</span>
             Administracion
           </button>
+          }
+
+
         </nav>
 
         <div class="flex items-center gap-3">
-          <button type="button"
+          @if (!usuario) {
+          <button [routerLink]="'login'" type="button"
             class="rounded-full border border-emerald-400/40 px-4 py-2 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-500/10">
             Ingresar
           </button>
+          }
+
+          @if (usuario) {
+          <button (click)="salir()" type="button"
+            class="rounded-full border border-emerald-400/40 px-4 py-2 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-500/10">
+            Salir
+          </button>
+          }
+
           <button type="button"
             class="rounded-full bg-linear-to-r from-emerald-400 to-lime-300 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/50 transition hover:scale-[1.02]">
             Publicar anuncio

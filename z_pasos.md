@@ -32,6 +32,9 @@ ng g c --standalone aplicacion/administracion/perfil
 
 ng g c --standalone aplicacion/administracion/anuncios
 ng g c --standalone aplicacion/administracion/anuncios/anuncio-lista
+ng g c --standalone aplicacion/administracion/anuncios/anuncio-nuevo
+ng g c --standalone aplicacion/administracion/anuncios/anuncio-editar
+
 ng g c --standalone aplicacion/administracion/anuncios/anuncio-form
 ng g c --standalone aplicacion/administracion/anuncios/anuncio-detalle
 

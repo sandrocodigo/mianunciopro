@@ -1,1 +1,514 @@
-<p>anuncio-form works!</p>
+<form class="max-w-6xl mx-auto space-y-8 px-6 py-8" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div>
+      <h1 class="text-3xl font-semibold leading-tight text-slate-800">Registrar nuevo anuncio</h1>
+      <p class="text-sm text-slate-500">
+        Completa la información y guarda para ver los detalles del anuncio recién creado.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button
+        type="submit"
+        class="flex h-11 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-400"
+        [disabled]="form.invalid || isSubmitting"
+      >
+        <mat-icon class="!text-base">save</mat-icon>
+        {{ isSubmitting ? 'Guardando...' : 'Guardar anuncio' }}
+      </button>
+    </div>
+  </div>
+
+  <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+    <header>
+      <h2 class="text-lg font-semibold text-slate-800">Datos generales</h2>
+      <p class="text-sm text-slate-500">Define el tipo de anuncio y la información básica.</p>
+    </header>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Tipo de anuncio
+        <select
+          formControlName="tipo"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        >
+          @for (tipo of tipoOpciones; track tipo.value) {
+            <option [value]="tipo.value">{{ tipo.label }}</option>
+          }
+        </select>
+        @if (controles.tipo.hasError('required')) {
+          <span class="text-xs font-normal text-rose-500">Selecciona un tipo de anuncio</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Categoría
+        <input
+          type="text"
+          formControlName="categoria"
+          placeholder="Vehículos, Inmuebles, Servicios..."
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        @if (controles.categoria.hasError('required') && controles.categoria.touched) {
+          <span class="text-xs font-normal text-rose-500">La categoría es obligatoria</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Subcategoría
+        <input
+          type="text"
+          formControlName="subcategoria"
+          placeholder="Ej. Automóviles, Departamentos..."
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        @if (controles.subcategoria.hasError('required') && controles.subcategoria.touched) {
+          <span class="text-xs font-normal text-rose-500">La subcategoría es obligatoria</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Vendedor
+        <input
+          type="text"
+          formControlName="vendedorId"
+          placeholder="ID del vendedor responsable"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        @if (controles.vendedorId.hasError('required') && controles.vendedorId.touched) {
+          <span class="text-xs font-normal text-rose-500">Indica el vendedor responsable</span>
+        }
+      </label>
+    </div>
+
+    @let tituloLength = controles.titulo.value?.length ?? 0;
+    <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+      Título del anuncio
+      <input
+        type="text"
+        formControlName="titulo"
+        placeholder="Escribe un título atractivo"
+        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+      />
+      <span class="ml-auto text-xs font-normal text-slate-400">{{ tituloLength }}/120</span>
+      @if (controles.titulo.hasError('required') && controles.titulo.touched) {
+        <span class="text-xs font-normal text-rose-500">El título es obligatorio</span>
+      }
+    </label>
+
+    @let descripcionLength = controles.descripcion.value?.length ?? 0;
+    <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+      Descripción
+      <textarea
+        formControlName="descripcion"
+        rows="5"
+        placeholder="Describe las características, beneficios y condiciones del anuncio"
+        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+      ></textarea>
+      <span class="ml-auto text-xs font-normal text-slate-400">{{ descripcionLength }}/2000</span>
+      @if (controles.descripcion.hasError('required') && controles.descripcion.touched) {
+        <span class="text-xs font-normal text-rose-500">Describe tu anuncio para generar confianza</span>
+      }
+    </label>
+  </section>
+
+  <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+    <header class="flex flex-col gap-1">
+      <h2 class="text-lg font-semibold text-slate-800">Precio y estado</h2>
+      <p class="text-sm text-slate-500">Controla la publicación y las condiciones de venta.</p>
+    </header>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Precio
+        <input
+          type="number"
+          min="0"
+          formControlName="precio"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        @if (controles.precio.hasError('required') && controles.precio.touched) {
+          <span class="text-xs font-normal text-rose-500">El precio es obligatorio</span>
+        }
+        @if (controles.precio.hasError('min')) {
+          <span class="text-xs font-normal text-rose-500">Ingresa un valor mayor a cero</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Moneda
+        <select
+          formControlName="moneda"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        >
+          @for (moneda of monedaOpciones; track moneda.value) {
+            <option [value]="moneda.value">{{ moneda.label }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-4">
+      <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
+        <input
+          type="checkbox"
+          formControlName="negociable"
+          class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+        />
+        Precio negociable
+      </label>
+
+      <label class="flex w-full flex-col gap-1 text-sm font-medium text-slate-700 md:w-64">
+        Estado del anuncio
+        <select
+          formControlName="estado"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        >
+          @for (estado of estadoOpciones; track estado.value) {
+            <option [value]="estado.value">{{ estado.label }}</option>
+          }
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+    <header>
+      <h2 class="text-lg font-semibold text-slate-800">Ubicación</h2>
+      <p class="text-sm text-slate-500">Ayuda a los interesados a encontrar tu anuncio.</p>
+    </header>
+
+    @let departamentoControl = controles.ubicacion.get('departamento');
+    @let ciudadControl = controles.ubicacion.get('ciudad');
+
+    <div class="grid gap-6 md:grid-cols-2" formGroupName="ubicacion">
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Departamento
+        <input
+          type="text"
+          formControlName="departamento"
+          placeholder="Ej. La Paz"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        @if (departamentoControl?.hasError('required') && departamentoControl?.touched) {
+          <span class="text-xs font-normal text-rose-500">El departamento es obligatorio</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Ciudad
+        <input
+          type="text"
+          formControlName="ciudad"
+          placeholder="Ej. El Alto"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        @if (ciudadControl?.hasError('required') && ciudadControl?.touched) {
+          <span class="text-xs font-normal text-rose-500">La ciudad es obligatoria</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Zona o barrio
+        <input
+          type="text"
+          formControlName="zona"
+          placeholder="Ej. Villa Adela"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+      </label>
+
+      <div class="grid gap-6 md:col-span-2 md:grid-cols-2">
+        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          Latitud
+          <input
+            type="number"
+            formControlName="lat"
+            placeholder="-16.5000"
+            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          />
+        </label>
+        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          Longitud
+          <input
+            type="number"
+            formControlName="lng"
+            placeholder="-68.1500"
+            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          />
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+    <header>
+      <h2 class="text-lg font-semibold text-slate-800">Características específicas</h2>
+      <p class="text-sm text-slate-500">Campos adicionales según el tipo de anuncio.</p>
+    </header>
+
+    <div formGroupName="attrs">
+      <ng-container [ngSwitch]="currentTipo">
+        <div *ngSwitchCase="'VEHICULO'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Marca
+            <input
+              type="text"
+              formControlName="marca"
+              placeholder="Ej. Toyota"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Modelo
+            <input
+              type="text"
+              formControlName="modelo"
+              placeholder="Ej. Corolla"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Año
+            <input
+              type="number"
+              formControlName="anio"
+              placeholder="2022"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Kilometraje
+            <input
+              type="number"
+              formControlName="kilometraje"
+              placeholder="45000"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Transmisión
+            <select
+              formControlName="transmision"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (transmision of transmisionOpciones; track transmision.value) {
+                <option [value]="transmision.value">{{ transmision.label }}</option>
+              }
+            </select>
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Combustible
+            <select
+              formControlName="combustible"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (combustible of combustibleOpciones; track combustible.value) {
+                <option [value]="combustible.value">{{ combustible.label }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        <div *ngSwitchCase="'INMUEBLE'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Tipo de propiedad
+            <select
+              formControlName="tipoPropiedad"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (tipo of tipoPropiedadOpciones; track tipo.value) {
+                <option [value]="tipo.value">{{ tipo.label }}</option>
+              }
+            </select>
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Metros cuadrados
+            <input
+              type="number"
+              formControlName="metrosCuadrados"
+              placeholder="120"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Habitaciones
+            <input
+              type="number"
+              formControlName="habitaciones"
+              placeholder="3"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Baños
+            <input
+              type="number"
+              formControlName="banos"
+              placeholder="2"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
+            <input
+              type="checkbox"
+              formControlName="amoblado"
+              class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            Propiedad amoblada
+          </label>
+        </div>
+
+        <div *ngSwitchCase="'EMPLEO'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Cargo
+            <input
+              type="text"
+              formControlName="cargo"
+              placeholder="Ej. Desarrollador Frontend"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Tipo de contrato
+            <select
+              formControlName="tipoContrato"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (tipo of tipoContratoOpciones; track tipo.value) {
+                <option [value]="tipo.value">{{ tipo.label }}</option>
+              }
+            </select>
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Salario mínimo
+            <input
+              type="number"
+              formControlName="salarioMin"
+              placeholder="4000"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Salario máximo
+            <input
+              type="number"
+              formControlName="salarioMax"
+              placeholder="8000"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+        </div>
+
+        <div *ngSwitchCase="'SERVICIO'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Rubro
+            <input
+              type="text"
+              formControlName="rubro"
+              placeholder="Ej. Plomería, Marketing..."
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Experiencia (años)
+            <input
+              type="number"
+              formControlName="experiencia"
+              placeholder="5"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+        </div>
+
+        <div *ngSwitchCase="'MARKETPLACE'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Condición
+            <select
+              formControlName="condicion"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (condicion of condicionOpciones; track condicion.value) {
+                <option [value]="condicion.value">{{ condicion.label }}</option>
+              }
+            </select>
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Marca
+            <input
+              type="text"
+              formControlName="marca"
+              placeholder="Ej. Samsung"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Modelo
+            <input
+              type="text"
+              formControlName="modelo"
+              placeholder="Ej. Galaxy S24"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+        </div>
+
+        <p *ngSwitchDefault class="text-sm text-slate-500">
+          Selecciona un tipo de anuncio para ver los atributos correspondientes.
+        </p>
+      </ng-container>
+    </div>
+  </section>
+
+  <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+    <header>
+      <h2 class="text-lg font-semibold text-slate-800">Galería de fotos</h2>
+      <p class="text-sm text-slate-500">
+        Añade enlaces a imágenes alojadas en la web o en tu almacenamiento.
+      </p>
+    </header>
+
+    <div class="space-y-4">
+      @for (control of fotos.controls; track $index; let i = $index) {
+        <div class="flex flex-col gap-3 rounded-2xl border border-slate-200 p-4 md:flex-row md:items-start md:gap-4">
+          <label class="flex w-full flex-col gap-1 text-sm font-medium text-slate-700">
+            URL de la foto {{ i + 1 }}
+            <input
+              type="url"
+              [formControl]="control"
+              placeholder="https://..."
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+            @if (control.invalid && control.touched) {
+              <span class="text-xs font-normal text-rose-500">Ingresa una URL o elimina el campo</span>
+            }
+          </label>
+
+          @if (fotos.length > 1) {
+            <button
+              type="button"
+              class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-slate-300 text-sm font-semibold text-slate-600 transition hover:border-rose-400 hover:text-rose-500 md:w-auto md:px-4"
+              (click)="eliminarFoto(i)"
+            >
+              <mat-icon class="!text-base">delete</mat-icon>
+              Eliminar
+            </button>
+          }
+        </div>
+      }
+
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-xl border border-indigo-300 px-4 py-2 text-sm font-semibold text-indigo-600 transition hover:border-indigo-400 hover:text-indigo-500"
+        (click)="agregarFoto()"
+      >
+        <mat-icon class="!text-base">add</mat-icon>
+        Agregar foto
+      </button>
+    </div>
+  </section>
+</form>
