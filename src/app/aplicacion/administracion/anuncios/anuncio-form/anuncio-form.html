@@ -12,7 +12,7 @@
         class="flex h-11 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-400"
         [disabled]="form.invalid || isSubmitting"
       >
-        <mat-icon class="!text-base">save</mat-icon>
+        <mat-icon class="text-base!">save</mat-icon>
         {{ isSubmitting ? 'Guardando...' : 'Guardar anuncio' }}
       </button>
     </div>
@@ -508,7 +508,7 @@
               class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-slate-300 text-sm font-semibold text-slate-600 transition hover:border-rose-400 hover:text-rose-500 md:w-auto md:px-4"
               (click)="eliminarFoto(i)"
             >
-              <mat-icon class="!text-base">delete</mat-icon>
+        <mat-icon class="text-base!">delete</mat-icon>
               Eliminar
             </button>
           }
@@ -520,7 +520,7 @@
         class="inline-flex items-center gap-2 rounded-xl border border-indigo-300 px-4 py-2 text-sm font-semibold text-indigo-600 transition hover:border-indigo-400 hover:text-indigo-500"
         (click)="agregarFoto()"
       >
-        <mat-icon class="!text-base">add</mat-icon>
+        <mat-icon class="text-base!">add</mat-icon>
         Agregar foto
       </button>
     </div>

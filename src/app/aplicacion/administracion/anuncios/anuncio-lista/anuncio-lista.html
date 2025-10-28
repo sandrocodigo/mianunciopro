@@ -1,11 +1,95 @@
 <div class="flex items-center justify-between py-4">
-    <div>
-        <h1 class="titulo" [animate.enter]="'fade-down'"> Anuncios </h1>
-        <p class="subtitulo" [animate.enter]="'fade-right'">Gestion de Anuncios</p>
-    </div>
-    <div class="ml-auto">
-        <button [routerLink]="'nuevo'" [animate.enter]="'grow-in'" matFab extended matTooltip="Adicionar" type="button">
-            <mat-icon>add</mat-icon> Nuevo
-        </button>
-    </div>
+  <div>
+    <h1 class="titulo" [animate.enter]="'fade-down'">Anuncios</h1>
+    <p class="subtitulo" [animate.enter]="'fade-right'">Gestión de Anuncios</p>
+  </div>
+  <div class="ml-auto">
+    <button
+      [routerLink]="'nuevo'"
+      [animate.enter]="'grow-in'"
+      mat-fab
+      extended
+      matTooltip="Adicionar"
+      type="button"
+    >
+      <mat-icon>add</mat-icon>
+      Nuevo
+    </button>
+  </div>
 </div>
+
+<section class="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+  <header class="mb-4 flex items-center justify-between">
+    <div>
+      <h2 class="text-lg font-semibold text-slate-800">Tus anuncios publicados</h2>
+      <p class="text-sm text-slate-500">
+        Revisa y actualiza la descripción o ubicación de cada anuncio rápidamente.
+      </p>
+    </div>
+    <mat-icon class="text-slate-400!">equalizer</mat-icon>
+  </header>
+
+  @let data = listaAnuncios.data;
+  @if (data.length === 0) {
+    <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
+      Aún no registraste anuncios o no pudimos encontrarlos. Crea uno nuevo para comenzar.
+    </div>
+  } @else {
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="listaAnuncios" class="w-full min-w-[640px] mat-elevation-z2 rounded-2xl">
+        <ng-container matColumnDef="categoria">
+          <th mat-header-cell *matHeaderCellDef class="text-left text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Categoría
+          </th>
+          <td mat-cell *matCellDef="let anuncio" class="text-sm font-medium text-slate-800">
+            {{ anuncio.categoria }} <br>
+            {{ anuncio.categoria1 }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="categoria1">
+          <th mat-header-cell *matHeaderCellDef class="text-left text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Detalle
+          </th>
+          <td mat-cell *matCellDef="let anuncio" class="text-sm text-slate-700">
+            {{ anuncio.categoria1 }}
+            @if (anuncio.titulo) {
+              <span class="block text-xs text-slate-400">Título: {{ anuncio.titulo }}</span>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="opciones">
+          <th mat-header-cell *matHeaderCellDef class="text-right text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Opciones
+          </th>
+          <td mat-cell *matCellDef="let anuncio" class="text-right">
+            <div class="flex justify-end gap-2">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="verUbicacion(anuncio)"
+                matTooltip="Actualizar ubicación"
+              >
+                <mat-icon>location_on</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="accent"
+                (click)="editarDescripcion(anuncio)"
+                matTooltip="Editar descripción"
+              >
+                <mat-icon>description</mat-icon>
+              </button>
+
+              <a matButton="elevated" [routerLink]="'detalle/'+ anuncio.id">Detalle</a>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-slate-100"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  }
+</section>

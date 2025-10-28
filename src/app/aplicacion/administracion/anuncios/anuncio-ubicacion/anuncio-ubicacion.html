@@ -5,7 +5,7 @@
 >
   <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <div>
-      <h1 class="text-3xl font-semibold leading-tight text-slate-800">Ubicación del anuncio</h1>
+      <h1 class="titulo">Ubicación del anuncio</h1>
       <p class="text-sm text-slate-500">
         Localiza el anuncio en el mapa y completa los datos para mejorar las búsquedas.
       </p>
@@ -16,7 +16,7 @@
         class="flex h-11 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-400"
         [disabled]="registroFormGroup.invalid && registroControl"
       >
-        <mat-icon class="!text-base">save</mat-icon>
+        <mat-icon class="text-base!">save</mat-icon>
         Guardar ubicación
       </button>
     </div>
@@ -54,7 +54,7 @@
         (click)="usarUbicacionActual()"
         [disabled]="solicitandoGeolocalizacion || !!mapError"
       >
-        <mat-icon class="!text-base">my_location</mat-icon>
+        <mat-icon class="text-base!">my_location</mat-icon>
         {{ solicitandoGeolocalizacion ? 'Obteniendo ubicación...' : 'Usar mi ubicación' }}
       </button>
     </div>

@@ -35,6 +35,9 @@ ng g c --standalone aplicacion/administracion/anuncios/anuncio-lista
 ng g c --standalone aplicacion/administracion/anuncios/anuncio-nuevo
 ng g c --standalone aplicacion/administracion/anuncios/anuncio-ubicacion
 ng g c --standalone aplicacion/administracion/anuncios/anuncio-descripcion
+ng g c --standalone aplicacion/administracion/anuncios/anuncio-imagenes
+
+
 ng g c --standalone aplicacion/administracion/anuncios/anuncio-editar
 
 ng g c --standalone aplicacion/administracion/anuncios/anuncio-form

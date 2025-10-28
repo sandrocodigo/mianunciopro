@@ -1,1 +1,316 @@
-<p>anuncio-descripcion works!</p>
+@if (cargando) {
+  <section class="mx-auto max-w-4xl rounded-3xl border border-slate-200 bg-white/90 px-6 py-10 text-center shadow-sm">
+    <h2 class="text-lg font-semibold text-slate-700">Cargando información del anuncio...</h2>
+    <p class="mt-2 text-sm text-slate-500">
+      Espera un momento mientras preparamos el formulario con los datos actuales.
+    </p>
+  </section>
+} @else if (!currentCategoria && !currentCategoriaClave) {
+  <section class="mx-auto max-w-4xl rounded-3xl border border-rose-200 bg-rose-50 px-6 py-10 text-center shadow-sm">
+    <h2 class="text-lg font-semibold text-rose-600">No encontramos la categoría del anuncio.</h2>
+    <p class="mt-2 text-sm text-rose-500">
+      Regresa a la lista de anuncios y vuelve a intentarlo, por favor.
+    </p>
+    <button
+      type="button"
+      class="mt-6 inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:text-slate-500"
+      routerLink="/administracion/anuncios"
+    >
+      <mat-icon class="text-base!">arrow_back</mat-icon>
+      Volver a anuncios
+    </button>
+  </section>
+} @else {
+  <form class="mx-auto max-w-4xl space-y-8 px-4 py-6 md:px-0" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="titulo">Descripción del anuncio</h1>
+        <p class="text-sm text-slate-500">
+          Actualiza el contenido y los detalles específicos para la categoría seleccionada.
+        </p>
+      </div>
+      <span class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-600">
+        <mat-icon class="text-base!">category</mat-icon>
+        {{ categoriaSeleccionadaLabel }}
+      </span>
+    </header>
+
+    <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+      <header>
+        <h2 class="text-lg font-semibold text-slate-800">Información general</h2>
+        <p class="text-sm text-slate-500">Mejora el título y la descripción para destacar tu anuncio.</p>
+      </header>
+
+      @let tituloControl = controles.titulo;
+      @let descripcionControl = controles.descripcion;
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Título
+        <input
+          type="text"
+          formControlName="titulo"
+          placeholder="Escribe un título atractivo"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        <span class="ml-auto text-xs font-normal text-slate-400">{{ tituloControl.value?.length ?? 0 }}/120</span>
+        @if (tituloControl.touched && tituloControl.hasError('required')) {
+          <span class="text-xs font-normal text-rose-500">El título es obligatorio</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Descripción
+        <textarea
+          formControlName="descripcion"
+          rows="6"
+          placeholder="Describe las características, beneficios y condiciones del anuncio"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        ></textarea>
+        <span class="ml-auto text-xs font-normal text-slate-400">{{ descripcionControl.value?.length ?? 0 }}/2000</span>
+        @if (descripcionControl.touched && descripcionControl.hasError('required')) {
+          <span class="text-xs font-normal text-rose-500">La descripción es obligatoria</span>
+        }
+      </label>
+    </section>
+
+    <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm" formGroupName="attrs">
+      <header>
+        <h2 class="text-lg font-semibold text-slate-800">Detalles específicos</h2>
+        <p class="text-sm text-slate-500">
+          Completa los campos correspondientes según la categoría seleccionada.
+        </p>
+      </header>
+
+      <ng-container [ngSwitch]="currentCategoriaClave">
+        <div *ngSwitchCase="'VEHICULO'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Marca
+            <input
+              type="text"
+              formControlName="marca"
+              placeholder="Ej. Toyota"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Modelo
+            <input
+              type="text"
+              formControlName="modelo"
+              placeholder="Ej. Corolla"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Año
+            <input
+              type="number"
+              formControlName="anio"
+              placeholder="2022"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Kilometraje
+            <input
+              type="number"
+              formControlName="kilometraje"
+              placeholder="45000"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Transmisión
+            <select
+              formControlName="transmision"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (transmision of transmisionOpciones; track transmision.value) {
+                <option [value]="transmision.value">{{ transmision.label }}</option>
+              }
+            </select>
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Combustible
+            <select
+              formControlName="combustible"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (combustible of combustibleOpciones; track combustible.value) {
+                <option [value]="combustible.value">{{ combustible.label }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        <div *ngSwitchCase="'INMUEBLE'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Tipo de propiedad
+            <select
+              formControlName="tipoPropiedad"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (tipo of tipoPropiedadOpciones; track tipo.value) {
+                <option [value]="tipo.value">{{ tipo.label }}</option>
+              }
+            </select>
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Metros cuadrados
+            <input
+              type="number"
+              formControlName="metrosCuadrados"
+              placeholder="120"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Habitaciones
+            <input
+              type="number"
+              formControlName="habitaciones"
+              placeholder="3"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Baños
+            <input
+              type="number"
+              formControlName="banos"
+              placeholder="2"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
+            <input
+              type="checkbox"
+              formControlName="amoblado"
+              class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            Propiedad amoblada
+          </label>
+        </div>
+
+        <div *ngSwitchCase="'EMPLEO'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Cargo
+            <input
+              type="text"
+              formControlName="cargo"
+              placeholder="Ej. Desarrollador Frontend"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Tipo de contrato
+            <select
+              formControlName="tipoContrato"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (tipo of tipoContratoOpciones; track tipo.value) {
+                <option [value]="tipo.value">{{ tipo.label }}</option>
+              }
+            </select>
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Salario mínimo
+            <input
+              type="number"
+              formControlName="salarioMin"
+              placeholder="4000"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Salario máximo
+            <input
+              type="number"
+              formControlName="salarioMax"
+              placeholder="8000"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+        </div>
+
+        <div *ngSwitchCase="'SERVICIO'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Rubro
+            <input
+              type="text"
+              formControlName="rubro"
+              placeholder="Ej. Plomería, Marketing..."
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Experiencia (años)
+            <input
+              type="number"
+              formControlName="experiencia"
+              placeholder="5"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+        </div>
+
+        <div *ngSwitchCase="'MARKETPLACE'" class="grid gap-6 md:grid-cols-2">
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Condición
+            <select
+              formControlName="condicion"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Selecciona</option>
+              @for (condicion of condicionOpciones; track condicion.value) {
+                <option [value]="condicion.value">{{ condicion.label }}</option>
+              }
+            </select>
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Marca
+            <input
+              type="text"
+              formControlName="marca"
+              placeholder="Ej. Samsung"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+          <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Modelo
+            <input
+              type="text"
+              formControlName="modelo"
+              placeholder="Ej. Galaxy S24"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </label>
+        </div>
+      </ng-container>
+    </section>
+
+    <footer class="flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:text-slate-500"
+        [routerLink]="['/administracion/anuncios/detalle', idAnuncio ?? '']"
+      >
+        <mat-icon class="text-base!">visibility</mat-icon>
+        Ver detalle
+      </button>
+
+      <button
+        type="submit"
+        class="inline-flex h-11 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-400"
+        [disabled]="guardando"
+      >
+        <mat-icon class="text-base!">save</mat-icon>
+        {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+    </footer>
+  </form>
+}
