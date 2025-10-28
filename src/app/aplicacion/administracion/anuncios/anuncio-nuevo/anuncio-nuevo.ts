@@ -14,6 +14,7 @@ import { AnuncioService } from '../../../servicios/anuncio.service';
 import { SpinnerService } from '../../../sistema/spinner/spinner.service';
 import { EmailService } from '../../../servicios/email.service';
 import { categorias } from '../../../datos/categoria';
+import { AuthService } from '../../../servicios/auth.service';
 
 @Component({
   selector: 'app-anuncio-nuevo',
@@ -44,11 +45,12 @@ export class AnuncioNuevo implements OnInit {
   fechaHoy = new Date();
   bloqueo = false;
 
-
   listaCategorias: any[] = categorias;
   listaCategorias1: any[] = [];
   listaCategorias2: any[] = [];
   listaCategorias3: any[] = [];
+
+  usuario: any | null = null;
 
   constructor(
     private anuncioServicio: AnuncioService,
@@ -56,17 +58,28 @@ export class AnuncioNuevo implements OnInit {
     private router: Router,
     private cargando: SpinnerService,
     private snackbar: MatSnackBar,
-    private emailServicio: EmailService,) {
-    this.registroFormGroup = this.fb.group({
+    private emailServicio: EmailService,
+    private authServicio: AuthService,
+  ) {
 
-      categoria: [null, [Validators.required]],
-      categoria1: [null, [Validators.required]],
-      categoria2: [null],
-      categoria3: [null],
+    this.authServicio.user$.subscribe((user) => {
+      if (user) {
+        this.usuario = user;
 
-      publicado: [false],
-      activo: [true]
+        this.registroFormGroup = this.fb.group({
+          categoria: [null, [Validators.required]],
+          categoria1: [null, [Validators.required]],
+          categoria2: [null],
+          categoria3: [null],
+
+          usuario: [this.usuario.email],
+          publicado: [false],
+          activo: [true]
+        });
+      }
     });
+
+
   }
 
   ngOnInit(): void {
@@ -188,7 +201,7 @@ export class AnuncioNuevo implements OnInit {
       this.anuncioServicio.nuevo(this.registroFormGroup.getRawValue()).then((res) => {
         this.cargando.hide();
         console.log('NUEVO ANUNCIO: ', res);
-        this.router.navigate(['/administracion/anuncios/editar/' + res.id]);
+        this.router.navigate(['/administracion/anuncios/ubicacion/' + res.id]);
         /*         this.snackbar.open('Muchas gracias por registrar su cita', 'OK', { duration: 10000 });
                 this.notificarAlIntersado();
                 this.notificarAlAdministrador();

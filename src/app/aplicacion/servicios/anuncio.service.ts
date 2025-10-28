@@ -14,10 +14,12 @@ import {
   query,
   serverTimestamp,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { Observable, catchError, map, of } from 'rxjs';
 
 import { Anuncio, TipoAnuncio } from '../modelos/anuncio';
+import { AuthService } from './auth.service';
 
 export type CrearAnuncioPayload = Omit<Anuncio, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -28,24 +30,39 @@ export class AnuncioService {
   private readonly url = 'anuncios';
   private readonly coleccion: CollectionReference<DocumentData>;
 
-  constructor(private readonly firestore: Firestore) {
+  private usuario: any | null = null;
+
+
+  constructor(private readonly firestore: Firestore,
+    private authServicio: AuthService,
+  ) {
     this.coleccion = collection(this.firestore, this.url);
+    this.authServicio.user$.subscribe((user) => {
+      if (user) { this.usuario = user; }
+    });
   }
 
 
   // NUEVO
   async nuevo(datos: any) {
-    const docRef = await addDoc(collection(this.firestore, `${this.url}`), datos);
+    const payload = {
+      ...datos,
+
+      registroUsuario: this.usuario.email,
+      registroFecha: serverTimestamp(),
+    };
+
+    const docRef = await addDoc(collection(this.firestore, `${this.url}`), payload);
     return docRef;
   }
 
   // EDITAR
   async editar(ID: any, datos: any) {
     // Convertir a flotante solo si el campo existe
-/*     if (datos.hasOwnProperty('cantidad')) { datos.cantidad = parseFloat(datos.cantidad); }
-    if (datos.hasOwnProperty('pc')) { datos.pc = parseFloat(datos.pc); }
-    if (datos.hasOwnProperty('pv')) { datos.pv = parseFloat(datos.pv); }
-    if (datos.hasOwnProperty('subtotal')) { datos.subtotal = parseFloat(datos.subtotal); } */
+    /*     if (datos.hasOwnProperty('cantidad')) { datos.cantidad = parseFloat(datos.cantidad); }
+        if (datos.hasOwnProperty('pc')) { datos.pc = parseFloat(datos.pc); }
+        if (datos.hasOwnProperty('pv')) { datos.pv = parseFloat(datos.pv); }
+        if (datos.hasOwnProperty('subtotal')) { datos.subtotal = parseFloat(datos.subtotal); } */
     const documento = doc(this.firestore, `${this.url}`, ID);
     await updateDoc(documento, datos);
   }
@@ -191,5 +208,20 @@ export class AnuncioService {
     }
     const numero = Number(valor);
     return Number.isFinite(numero) ? numero : undefined;
+  }
+
+  // OBTENER POR USUARIO
+  async obtenerPorUsuario(idUsuario: any): Promise<any[]> {
+    let q = query(
+      collection(this.firestore, `${this.url}`) as CollectionReference<any>,
+      where('usuario', '==', idUsuario)
+    );
+    return getDocs(q).then((querySnapshot) => {
+      const registros: any[] = [];
+      querySnapshot.forEach((doc) => {
+        registros.push({ ...doc.data(), id: doc.id } as any);
+      });
+      return registros;
+    });
   }
 }

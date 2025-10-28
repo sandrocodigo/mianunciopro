@@ -3,6 +3,7 @@ export type TipoAnuncio = 'VEHICULO' | 'INMUEBLE' | 'EMPLEO' | 'SERVICIO' | 'MAR
 
 export interface Ubicacion {
     departamento: string;      // "La Paz"
+    provincia: string;
     ciudad: string;            // "El Alto"
     zona?: string;             // "Villa Adela"
     lat?: number;
@@ -89,6 +90,5 @@ export type Anuncio =
     | (BaseAnuncio & { tipo: 'EMPLEO'; attrs: AttrsEmpleo })
     | (BaseAnuncio & { tipo: 'SERVICIO'; attrs: AttrsServicio })
     | (BaseAnuncio & { tipo: 'MARKETPLACE'; attrs: AttrsMarketplace });
-
 
 

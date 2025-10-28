@@ -1,1 +1,169 @@
-<p>anuncio-ubicacion works!</p>
+<form
+  class="mx-auto max-w-6xl space-y-8 px-6 py-8"
+  [formGroup]="registroFormGroup"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div>
+      <h1 class="text-3xl font-semibold leading-tight text-slate-800">Ubicación del anuncio</h1>
+      <p class="text-sm text-slate-500">
+        Localiza el anuncio en el mapa y completa los datos para mejorar las búsquedas.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button
+        type="submit"
+        class="flex h-11 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-400"
+        [disabled]="registroFormGroup.invalid && registroControl"
+      >
+        <mat-icon class="!text-base">save</mat-icon>
+        Guardar ubicación
+      </button>
+    </div>
+  </div>
+
+  <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+    <header class="space-y-1">
+      <h2 class="text-lg font-semibold text-slate-800">Selecciona la ubicación</h2>
+      <p class="text-sm text-slate-500">
+        Busca una dirección o haz clic en el mapa para ubicar el punto exacto del anuncio.
+      </p>
+    </header>
+
+    @if (mapError) {
+      <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+        {{ mapError }}
+      </div>
+    }
+
+    <div class="flex flex-col gap-3 md:flex-row md:items-center">
+      <label class="flex w-full flex-col gap-1 text-sm font-medium text-slate-700 md:flex-1">
+        Buscar dirección
+        <input
+          #searchInput
+          type="text"
+          placeholder="Ej. Plaza Murillo, La Paz"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          [disabled]="!!mapError"
+        />
+      </label>
+
+      <button
+        type="button"
+        class="inline-flex h-12 items-center gap-2 rounded-xl border border-indigo-300 px-4 text-sm font-semibold text-indigo-600 transition hover:border-indigo-400 hover:text-indigo-500 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400"
+        (click)="usarUbicacionActual()"
+        [disabled]="solicitandoGeolocalizacion || !!mapError"
+      >
+        <mat-icon class="!text-base">my_location</mat-icon>
+        {{ solicitandoGeolocalizacion ? 'Obteniendo ubicación...' : 'Usar mi ubicación' }}
+      </button>
+    </div>
+
+    <div
+      #mapContainer
+      class="h-80 w-full overflow-hidden rounded-3xl border border-slate-200 shadow-inner"
+      [class.pointer-events-none]="!!mapError"
+    ></div>
+    <p class="text-xs text-slate-500">
+      Mueve el marcador para ajustar el punto. Los campos se rellenarán automáticamente.
+    </p>
+  </section>
+
+  <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+    <header>
+      <h2 class="text-lg font-semibold text-slate-800">Confirma los datos de ubicación</h2>
+      <p class="text-sm text-slate-500">Verifica que la información sea correcta antes de guardar.</p>
+    </header>
+
+    @let ubicacion = registroFormGroup.controls.ubicacion;
+    @let departamentoControl = ubicacion.controls.departamento;
+    @let provinciaControl = ubicacion.controls.provincia;
+    @let ciudadControl = ubicacion.controls.ciudad;
+
+    <div class="grid gap-6 md:grid-cols-2" formGroupName="ubicacion">
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Departamento
+        <input
+          type="text"
+          formControlName="departamento"
+          placeholder="Ej. La Paz"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        @if (departamentoControl.touched && departamentoControl.hasError('required')) {
+          <span class="text-xs font-normal text-rose-500">El departamento es obligatorio</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Provincia
+        <input
+          type="text"
+          formControlName="provincia"
+          placeholder="Ej. Pedro Domingo Murillo"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        @if (provinciaControl.touched && provinciaControl.hasError('required')) {
+          <span class="text-xs font-normal text-rose-500">La provincia es obligatoria</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Ciudad
+        <input
+          type="text"
+          formControlName="ciudad"
+          placeholder="Ej. El Alto"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+        @if (ciudadControl.touched && ciudadControl.hasError('required')) {
+          <span class="text-xs font-normal text-rose-500">La ciudad es obligatoria</span>
+        }
+      </label>
+
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Zona o barrio
+        <input
+          type="text"
+          formControlName="zona"
+          placeholder="Ej. Villa Adela"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+      </label>
+
+      <div class="grid gap-6 md:col-span-2 md:grid-cols-3">
+        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          Latitud
+          <input
+            type="number"
+            formControlName="lat"
+            placeholder="-16.5000"
+            inputmode="decimal"
+            class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            readonly
+          />
+        </label>
+        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          Longitud
+          <input
+            type="number"
+            formControlName="lng"
+            placeholder="-68.1500"
+            inputmode="decimal"
+            class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            readonly
+          />
+        </label>
+        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          Geohash
+          <input
+            type="text"
+            formControlName="geohash"
+            placeholder="c2b0p0xyz"
+            class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            readonly
+          />
+        </label>
+      </div>
+    </div>
+  </section>
+</form>

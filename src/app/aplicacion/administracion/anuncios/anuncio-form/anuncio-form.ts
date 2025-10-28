@@ -149,6 +149,9 @@ export class AnuncioForm {
       departamento: this.formBuilder.control<string | null>('', {
         validators: [Validators.required],
       }),
+      provincia: this.formBuilder.control<string | null>('', {
+        validators: [Validators.required],
+      }),
       ciudad: this.formBuilder.control<string | null>('', {
         validators: [Validators.required],
       }),
@@ -246,6 +249,7 @@ export class AnuncioForm {
       negociable: valores.negociable ?? false,
       ubicacion: {
         departamento: valores.ubicacion?.departamento ?? '',
+        provincia: '',
         ciudad: valores.ubicacion?.ciudad ?? '',
         zona: valores.ubicacion?.zona ?? undefined,
         lat: this.aNumero(valores.ubicacion?.lat),

@@ -16,6 +16,8 @@ export default [
             { path: '', component: AnuncioLista, },
             { path: 'nuevo', component: AnuncioNuevo, },
             { path: 'ubicacion/:id', component: AnuncioUbicacion, },
+            { path: 'descripcion/:id', component: AnuncioEditar, },
+            
             { path: 'editar/:id', component: AnuncioEditar, },
             { path: 'detalle/:id', component: AnuncioDetalle, },
         ]
