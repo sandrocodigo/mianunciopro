@@ -32,6 +32,24 @@ export class AnuncioService {
     this.coleccion = collection(this.firestore, this.url);
   }
 
+
+  // NUEVO
+  async nuevo(datos: any) {
+    const docRef = await addDoc(collection(this.firestore, `${this.url}`), datos);
+    return docRef;
+  }
+
+  // EDITAR
+  async editar(ID: any, datos: any) {
+    // Convertir a flotante solo si el campo existe
+/*     if (datos.hasOwnProperty('cantidad')) { datos.cantidad = parseFloat(datos.cantidad); }
+    if (datos.hasOwnProperty('pc')) { datos.pc = parseFloat(datos.pc); }
+    if (datos.hasOwnProperty('pv')) { datos.pv = parseFloat(datos.pv); }
+    if (datos.hasOwnProperty('subtotal')) { datos.subtotal = parseFloat(datos.subtotal); } */
+    const documento = doc(this.firestore, `${this.url}`, ID);
+    await updateDoc(documento, datos);
+  }
+
   async crear(anuncio: CrearAnuncioPayload): Promise<string> {
     const payload = {
       ...anuncio,

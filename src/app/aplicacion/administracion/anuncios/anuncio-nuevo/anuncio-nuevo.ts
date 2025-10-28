@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
@@ -13,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AnuncioService } from '../../../servicios/anuncio.service';
 import { SpinnerService } from '../../../sistema/spinner/spinner.service';
 import { EmailService } from '../../../servicios/email.service';
+import { categorias } from '../../../datos/categoria';
 
 @Component({
   selector: 'app-anuncio-nuevo',
@@ -35,7 +36,7 @@ import { EmailService } from '../../../servicios/email.service';
 
   ],
 })
-export class AnuncioNuevo {
+export class AnuncioNuevo implements OnInit {
 
   registroControl = false;
   registroFormGroup!: FormGroup;
@@ -43,7 +44,11 @@ export class AnuncioNuevo {
   fechaHoy = new Date();
   bloqueo = false;
 
-  email = 'contacto@miapppro.com';
+
+  listaCategorias: any[] = categorias;
+  listaCategorias1: any[] = [];
+  listaCategorias2: any[] = [];
+  listaCategorias3: any[] = [];
 
   constructor(
     private anuncioServicio: AnuncioService,
@@ -53,25 +58,122 @@ export class AnuncioNuevo {
     private snackbar: MatSnackBar,
     private emailServicio: EmailService,) {
     this.registroFormGroup = this.fb.group({
-      nombres: [null, [Validators.required, Validators.minLength(3)]],
-      email: [null, [Validators.required, Validators.email]],
-      telefono: [null, [Validators.required]],
-      consulta: [null, [Validators.required]],
 
-      fechaRegistro: [this.fechaHoy],
-      confirmado: [false],
-      atendido: [false],
-      enviado: [false],
+      categoria: [null, [Validators.required]],
+      categoria1: [null, [Validators.required]],
+      categoria2: [null],
+      categoria3: [null],
+
+      publicado: [false],
       activo: [true]
     });
   }
 
   ngOnInit(): void {
-    // this.fechas = this.citaServicio.getNext30BusinessDays('iso')
+    this.establecerSuscripcion();
+    this.inicializarListasDesdeFormulario();
   }
 
   // FORM
   get r(): any { return this.registroFormGroup.controls; }
+
+
+  establecerSuscripcion() {
+    this.r.categoria.valueChanges.subscribe((categoriaId: string | null) => {
+      this.actualizarNivel1(categoriaId);
+    });
+
+    this.r.categoria1.valueChanges.subscribe((categoriaId: string | null) => {
+      this.actualizarNivel2(categoriaId);
+    });
+
+    this.r.categoria2.valueChanges.subscribe((categoriaId: string | null) => {
+      this.actualizarNivel3(categoriaId);
+    });
+  }
+
+  private inicializarListasDesdeFormulario(): void {
+    const categoriaSeleccionada = this.r.categoria.value;
+    const categoria1Seleccionada = this.r.categoria1.value;
+    const categoria2Seleccionada = this.r.categoria2.value;
+
+    if (categoriaSeleccionada) {
+      this.actualizarNivel1(categoriaSeleccionada, false);
+    }
+
+    if (categoria1Seleccionada) {
+      this.actualizarNivel2(categoria1Seleccionada, false);
+    }
+
+    if (categoria2Seleccionada) {
+      this.actualizarNivel3(categoria2Seleccionada, false);
+    }
+  }
+
+  private actualizarNivel1(categoriaId: string | null, resetValor = true): void {
+    this.listaCategorias1 = [];
+    if (resetValor) {
+      this.r.categoria1.setValue(null, { emitEvent: false });
+    }
+    this.resetNivel2(resetValor);
+
+    if (!categoriaId) {
+      return;
+    }
+
+    const categoriaSeleccionada = this.listaCategorias.find((cat) => cat.id === categoriaId);
+    if (categoriaSeleccionada?.subcategoria) {
+      this.listaCategorias1 = categoriaSeleccionada.subcategoria;
+    }
+  }
+
+  private actualizarNivel2(categoriaId: string | null, resetValor = true): void {
+    this.listaCategorias2 = [];
+    if (resetValor) {
+      this.r.categoria2.setValue(null, { emitEvent: false });
+    }
+    this.resetNivel3(resetValor);
+
+    if (!categoriaId) {
+      return;
+    }
+
+    const categoriaSeleccionada = this.listaCategorias1.find((cat) => cat.id === categoriaId);
+    if (categoriaSeleccionada?.subcategoria) {
+      this.listaCategorias2 = categoriaSeleccionada.subcategoria;
+    }
+  }
+
+  private actualizarNivel3(categoriaId: string | null, resetValor = true): void {
+    this.listaCategorias3 = [];
+    if (resetValor) {
+      this.r.categoria3.setValue(null, { emitEvent: false });
+    }
+
+    if (!categoriaId) {
+      return;
+    }
+
+    const categoriaSeleccionada = this.listaCategorias2.find((cat) => cat.id === categoriaId);
+    if (categoriaSeleccionada?.subcategoria) {
+      this.listaCategorias3 = categoriaSeleccionada.subcategoria;
+    }
+  }
+
+  private resetNivel2(resetearValor = true): void {
+    this.listaCategorias2 = [];
+    if (resetearValor) {
+      this.r.categoria2.setValue(null, { emitEvent: false });
+    }
+    this.resetNivel3(resetearValor);
+  }
+
+  private resetNivel3(resetearValor = true): void {
+    this.listaCategorias3 = [];
+    if (resetearValor) {
+      this.r.categoria3.setValue(null, { emitEvent: false });
+    }
+  }
 
 
   onSubmit(): void {
@@ -82,130 +184,20 @@ export class AnuncioNuevo {
       });
       return;
     } else {
-      this.cargando.show();
-      this.anuncioServicio.crear(this.registroFormGroup.getRawValue()).then((res) => {
+      this.cargando.show('Guardando datos...');
+      this.anuncioServicio.nuevo(this.registroFormGroup.getRawValue()).then((res) => {
         this.cargando.hide();
-        console.log('CITA: ', res);
-
-/*         this.snackbar.open('Muchas gracias por registrar su cita', 'OK', { duration: 10000 });
-        this.notificarAlIntersado();
-        this.notificarAlAdministrador();
-        this.router.navigate(['/contacto/confirmacion/' + res.id]); */
+        console.log('NUEVO ANUNCIO: ', res);
+        this.router.navigate(['/administracion/anuncios/editar/' + res.id]);
+        /*         this.snackbar.open('Muchas gracias por registrar su cita', 'OK', { duration: 10000 });
+                this.notificarAlIntersado();
+                this.notificarAlAdministrador();
+                 */
 
       });
 
       // this.r.mensaje.setValue('');
     }
-  }
-
-  notificarAlIntersado() {
-    // smtps://contacto@miapppro.com:qadtzomrjczpfscg@smtp.gmail.com:465
-    // contacto@miapppro.com
-    const correo = {
-      from: `"miAppPRO" <contacto@miapppro.com>`,
-      to: this.r.email.value,
-      message: {
-        subject: 'Solicitud de informacion de Sevicio MiCybersecurityPRO',
-        html:
-          '<div style="-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; padding: 4px;">' +
-          '<div style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);' +
-          '-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; ' +
-          'color: rgb(241, 243, 243); font-size: 25px; text-align: center;">' +
-          '<p> MiCybersecurityPRO </p>' +
-          '<p> Gestion de Ciberseguridad</p>' +
-          '</div>' +
-          '<br>' +
-          '<div style="font-size: 15px;">' +
-          '<p> Hola: ' + this.r.nombres.value + ', ' +
-          'Como estas?' +
-          '</p>' +
-          '<hr>' +
-          '<p> Muchas gracias por contactarnos: </p>' +
-          '<hr>' +
-          /*           '<p>Organizacion: ' + this.r.empresa.value + '  </p>' + */
-          '<p>Telefono: ' + this.r.telefono.value + '  </p>' +
-          '<p>Mensaje: ' + this.r.consulta.value + '  </p>' +
-          '<hr>' +
-          '<br>' +
-          '<p>Muchas gracias por escribirnos, pronto te respondemos, saludos </p>' +
-          '<br>' +
-          '<h1><a href="https://micybersecuritypro.miapppro.com/' +
-          '" target="_blank">miCybersecurityPRO.miapppro.com' +
-          '</a></h1>' +
-          '<br>' +
-          '<hr>' +
-          '</div>' +
-          '<br>' +
-          '<div style = "background: linear-gradient(to right, #078d9c, #3697d8, #08c89f, #0d8002);' +
-          '-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;' +
-          'color: rgb(241, 243, 243); font-size: 15px; text-align: center;">' +
-          '© Copyrights 2025 MiAppPRO All rights reserved.' +
-          '</div> ' +
-          '</div> ',
-      },
-    }
-    this.emailServicio.crear(correo).then((respuesta: any) => {
-      this.snackbar.open('Hola!, enviamos una copia de este mensaje a  tu correo...', 'OK', {
-        duration: 10000
-      });
-      // this.actualizarUsuarios();
-    });
-
-  }
-
-  notificarAlAdministrador() {
-
-    const adm = 'contacto@miapppro.com';
-    // smtps://contacto@miapppro.com:qadtzomrjczpfscg@smtp.gmail.com:465
-    // contacto@miapppro.com
-    const correo = {
-      from: `"miAppPRO" <contacto@miapppro.com>`,
-      to: adm,
-      message: {
-        subject: 'Solicitud de informacion de Sevicio MiAppPRO',
-        html:
-          '<div style="-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; padding: 4px;">' +
-          '<div style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);' +
-          '-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; ' +
-          'color: rgb(241, 243, 243); font-size: 25px; text-align: center;">' +
-          '<p> miAppPRO </p>' +
-          '<p> Software & Ciberseguridad</p>' +
-          '</div>' +
-          '<br>' +
-          '<div style="font-size: 15px;">' +
-          '<p> Hola: ' + this.r.nombres.value + ', ' +
-          'Como estas?' +
-          '</p>' +
-          '<hr>' +
-          '<p> Muchas gracias por contactarnos: </p>' +
-          '<hr>' +
-          /*           '<p>Organizacion: ' + this.r.empresa.value + '  </p>' + */
-          '<p>Telefono: ' + this.r.telefono.value + '  </p>' +
-          '<p>Mensaje: ' + this.r.consulta.value + '  </p>' +
-          '<hr>' +
-          '<br>' +
-          '<h1><a href="https://miapppro.com/' +
-          '" target="_blank">miAppPRO.com' +
-          '</a></h1>' +
-          '<br>' +
-          '<hr>' +
-          '</div>' +
-          '<br>' +
-          '<div style = "background: linear-gradient(to right, #078d9c, #3697d8, #08c89f, #0d8002);' +
-          '-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;' +
-          'color: rgb(241, 243, 243); font-size: 15px; text-align: center;">' +
-          '© Copyrights 2024 MiAppPRO All rights reserved.' +
-          '</div> ' +
-          '</div> ',
-      },
-    }
-    this.emailServicio.crear(correo).then((respuesta: any) => {
-      this.snackbar.open('Hola!, enviamos una copia de este mensaje a  tu correo...', 'OK', {
-        duration: 10000
-      });
-      // this.actualizarUsuarios();
-    });
-
   }
 
 }

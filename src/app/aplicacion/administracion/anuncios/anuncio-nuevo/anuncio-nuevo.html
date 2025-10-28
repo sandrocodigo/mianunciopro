@@ -13,58 +13,89 @@
 
 <div class="flex flex-wrap gap-6 px-4">
     <!-- Formulario -->
-    <div class="w-full md:w-1/2 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-        <form *ngIf="registroFormGroup" (ngSubmit)="onSubmit()" [formGroup]="registroFormGroup">
+    <div
+        class="w-full rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-2xl shadow-emerald-950/40 backdrop-blur-xl">
+        <form *ngIf="registroFormGroup" (ngSubmit)="onSubmit()" [formGroup]="registroFormGroup"
+            class="flex flex-col gap-10 text-slate-100">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
+                <div class="flex items-center gap-4">
+                    <span
+                        class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-300 shadow-lg shadow-emerald-900/40">
+                        <span class="material-icons text-2xl">category</span>
+                    </span>
+                    <div class="space-y-1">
+                        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200/70">Clasificación</p>
+                        <h2 class="text-xl font-semibold">Selecciona la ruta del anuncio</h2>
+                        <p class="text-sm text-slate-400">Cada nivel se desbloquea al elegir la categoría anterior, así
+                            construyes la jerarquía completa.</p>
+                    </div>
+                </div>
+                <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200/80">
+                    Paso 1 de 3
+                </div>
+            </div>
 
-            <mat-form-field class="w-full">
-                <mat-label>Nombre</mat-label>
-                <input name="telefono" matInput placeholder="nombres" formControlName="nombres">
-                <mat-icon matSuffix>person</mat-icon>
-                <mat-hint>Nombre Completo</mat-hint>
-                <mat-error *ngIf="registroControl && r.nombres.errors?.required">Requerido</mat-error>
-            </mat-form-field>
+            <div class="flex flex-col gap-4 md:flex-row md:flex-wrap md:items-end">
+                <mat-form-field class="w-full md:min-w-[220px] md:flex-1">
+                    <mat-label>Categoría principal</mat-label>
+                    <mat-select formControlName="categoria">
+                        @for (item of listaCategorias; track $index) {
+                        <mat-option [value]="item.id">{{ item.descripcion }}</mat-option>
+                        }
+                    </mat-select>
+                    @if (registroControl && r.categoria.errors && r.categoria.errors.required) {
+                    <mat-error>Se requiere la categoría</mat-error>
+                    }
+                </mat-form-field>
 
-            <mat-form-field class="w-full mt-4">
-                <mat-label>Email</mat-label>
-                <input name="email" matInput placeholder="email" formControlName="email">
-                <mat-icon matSuffix>email</mat-icon>
-                <mat-hint>Correo Electrónico</mat-hint>
-                <mat-error *ngIf="registroControl && r.email.errors?.required">Requerido</mat-error>
-                <mat-error *ngIf="registroControl && r.email.errors?.email">Incorrecto</mat-error>
-            </mat-form-field>
+                @if (listaCategorias1.length) {
+                <mat-form-field class="w-full md:min-w-[220px] md:flex-1 transition-all duration-300 ease-out">
+                    <mat-label>Subcategoría</mat-label>
+                    <mat-select formControlName="categoria1">
+                        @for (item of listaCategorias1; track $index) {
+                        <mat-option [value]="item.id">{{ item.descripcion }}</mat-option>
+                        }
+                    </mat-select>
+                    @if (registroControl && r.categoria1.errors && r.categoria1.errors.required) {
+                    <mat-error>Se requiere la categoría 1</mat-error>
+                    }
+                </mat-form-field>
+                }
 
-            <mat-form-field class="w-full mt-4">
-                <mat-label>Teléfono</mat-label>
-                <input name="telefono" matInput placeholder="telefono" formControlName="telefono">
-                <mat-icon matSuffix>phone</mat-icon>
-                <mat-hint>Incluir código de área</mat-hint>
-                <mat-error *ngIf="registroControl && r.telefono.errors?.required">Requerido</mat-error>
-            </mat-form-field>
+                @if (listaCategorias2.length) {
+                <mat-form-field class="w-full md:min-w-[220px] md:flex-1 transition-all duration-300 ease-out">
+                    <mat-label>Subcategoría avanzada</mat-label>
+                    <mat-select formControlName="categoria2">
+                        @for (item of listaCategorias2; track $index) {
+                        <mat-option [value]="item.id">{{ item.descripcion }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                }
 
-            <mat-form-field class="w-full mt-4">
-                <mat-label>Consulta</mat-label>
-                <input name="consulta" matInput placeholder="consulta" formControlName="consulta">
-                <mat-icon matSuffix>message</mat-icon>
-                <mat-hint>¿Cuál es su consulta?</mat-hint>
-                <mat-error *ngIf="registroControl && r.consulta.errors?.required">Requerido</mat-error>
-            </mat-form-field>
+                @if (listaCategorias3.length) {
+                <mat-form-field class="w-full md:min-w-[220px] md:flex-1 transition-all duration-300 ease-out">
+                    <mat-label>Detalle específico</mat-label>
+                    <mat-select formControlName="categoria3">
+                        @for (item of listaCategorias3; track $index) {
+                        <mat-option [value]="item.id">{{ item.descripcion }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                }
+            </div>
 
-            <div class="text-right mt-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
+                <div class="text-sm text-slate-400">
+                    Completa todos los niveles para que tu anuncio aparezca en las búsquedas más relevantes.
+                </div>
                 <button color="primary" mat-flat-button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-md transition">
-                    Enviar
+                    class="group inline-flex items-center gap-2 rounded-full bg-linear-to-r from-emerald-400 via-emerald-500 to-lime-300 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/40 transition hover:-translate-y-0.5 hover:shadow-emerald-800/60">
+                    <span>Guardar clasificación</span>
+                    <span class="material-icons text-base transition-transform duration-150 group-hover:translate-x-1">check</span>
                 </button>
             </div>
 
         </form>
-    </div>
-
-    <!-- Mensaje -->
-    <div
-        class="w-full md:w-1/2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 p-6 rounded-xl shadow-md text-lg">
-        <p class="leading-relaxed">
-            Escríbenos a: <span class="font-semibold text-blue-600 dark:text-blue-400">{{email}}</span>, si tienes
-            alguna duda o si quieres participar de este proyecto.
-        </p>
     </div>
 </div>

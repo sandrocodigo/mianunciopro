@@ -14,7 +14,14 @@ export const categorias = [
         descripcion: 'Piezas y Accesorios',
         subcategoria: [
           { id: 'CHASIS_PARTES_EXTERNAS', descripcion: 'Chasis y Partes Externas' },
-          { id: 'EQUIPO_MUSICA', descripcion: 'Equipo de Música' },
+          {
+            id: 'EQUIPO_MUSICA',
+            descripcion: 'Equipo de Música',
+            subcategoria: [
+              { id: '5.1', descripcion: '5.1' },
+              { id: '7.1', descripcion: '7.1' },
+            ]
+          },
           { id: 'LLANTAS_RUEDAS', descripcion: 'Llantas y Ruedas' },
           { id: 'MOTORES_TRANSMISION', descripcion: 'Motores y Transmisión' },
           { id: 'INTERIOR', descripcion: 'Accesorios de Interior' },
