@@ -85,22 +85,22 @@ export class AnuncioLista {
     this.anuncioServicio.obtenerPorUsuario(this.usuario.email).then((res: any) => {
       this.cargando.hide();
       console.log('ANUNCIOS: ', res);
-/*       const mapped = (res ?? []).map((anuncio: any) => {
-        const categoria = anuncio?.categoria ?? 'Sin categoría';
-        const categoria1 =
-          anuncio?.subcategoria ??
-          anuncio?.titulo ??
-          anuncio?.attrs?.tipoPropiedad ??
-          'Sin detalle';
-        return {
-          id: anuncio?.id ?? '',
-          categoria,
-          categoria1,
-          titulo: anuncio?.titulo,
-          estado: anuncio?.estado,
-          raw: anuncio,
-        } satisfies AnuncioTabla;
-      }); */
+      /*       const mapped = (res ?? []).map((anuncio: any) => {
+              const categoria = anuncio?.categoria ?? 'Sin categoría';
+              const categoria1 =
+                anuncio?.subcategoria ??
+                anuncio?.titulo ??
+                anuncio?.attrs?.tipoPropiedad ??
+                'Sin detalle';
+              return {
+                id: anuncio?.id ?? '',
+                categoria,
+                categoria1,
+                titulo: anuncio?.titulo,
+                estado: anuncio?.estado,
+                raw: anuncio,
+              } satisfies AnuncioTabla;
+            }); */
       this.listaAnuncios.data = res;
     }).catch((error: unknown) => {
       this.cargando.hide();
@@ -121,5 +121,12 @@ export class AnuncioLista {
       return;
     }
     this.router.navigate(['/administracion/anuncios/descripcion', anuncio.id]);
+  }
+
+  editarImagenes(anuncio: AnuncioTabla): void {
+    if (!anuncio?.id) {
+      return;
+    }
+    this.router.navigate(['/administracion/anuncios/imagenes', anuncio.id]);
   }
 }
