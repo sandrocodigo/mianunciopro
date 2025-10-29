@@ -16,10 +16,13 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+
 import { SpinnerService } from '../../../sistema/spinner/spinner.service';
 import { AnuncioService } from '../../../servicios/anuncio.service';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../../servicios/auth.service';
+import { ConfirmacionComponent } from '../../../sistema/confirmacion/confirmacion.component';
 
 type AnuncioTabla = {
   id: string;
@@ -49,6 +52,7 @@ type AnuncioTabla = {
     MatCardModule,
     MatTableModule,
     MatTooltipModule,
+    MatMenuModule
   ],
   templateUrl: './anuncio-lista.html',
   styleUrl: './anuncio-lista.css'
@@ -58,7 +62,7 @@ export class AnuncioLista {
   usuario: any | null = null;
 
   listaAnuncios: MatTableDataSource<AnuncioTabla> = new MatTableDataSource<AnuncioTabla>([]);
-  displayedColumns: string[] = ['categoria', 'ubicacion', 'categoria1', 'opciones'];
+  displayedColumns: string[] = ['categoria', 'ubicacion', 'descripcion', 'publicado', 'opciones'];
 
   constructor(
     private fb: FormBuilder,
@@ -109,7 +113,7 @@ export class AnuncioLista {
     });
   }
 
-  verUbicacion(anuncio: AnuncioTabla): void {
+  editarUbicacion(anuncio: AnuncioTabla): void {
     if (!anuncio?.id) {
       return;
     }
@@ -128,5 +132,26 @@ export class AnuncioLista {
       return;
     }
     this.router.navigate(['/administracion/anuncios/imagenes', anuncio.id]);
+  }
+
+  cambiarPublicacion(fila: any) {
+    const dialogRef = this.dialog.open(ConfirmacionComponent, {
+      width: '400px',
+      data: {
+        titulo: 'Publicacion de Anuncio',
+        mensaje: '¿Esta seguro de realizar esta accion?',
+        nota: fila.publicado ? 'Se quitara la publicacion y nadie vera tu anuncio' : 'Se realizara la publicacion del anuncio y estara visible para los usuarios.',
+      },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.cargando.show('Cambiando estado de publicacion...');
+        this.anuncioServicio.editar(fila.id, { publicado: !fila.publicado, publicadoFecha: new Date() }).then(result => {
+          this.cargando.hide();
+          this.snackbar.open('Cambios realizados con exito...', 'OK', { duration: 10000 });
+          this.obtenerConsulta();
+        })
+      }
+    });
   }
 }

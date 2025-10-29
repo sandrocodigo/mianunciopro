@@ -5,6 +5,8 @@ import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  AbstractControl,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -162,6 +164,7 @@ export class AnuncioDescripcion implements OnInit {
       this.anuncioActual = anuncio;
       this.currentCategoria = anuncio.categoria ?? null;
       this.currentCategoriaClave = this.resolverCategoriaClave(this.currentCategoria);
+      this.configurarValidadoresPorCategoria(this.currentCategoriaClave);
 
       this.form.patchValue({
         titulo: anuncio.titulo ?? '',
@@ -235,6 +238,7 @@ export class AnuncioDescripcion implements OnInit {
         control.patchValue(String(valor));
       }
     });
+    group.updateValueAndValidity({ emitEvent: false });
   }
 
   private extraerAttrsPorCategoria(tipo: CategoriaClave | null): Record<string, unknown> {
@@ -353,5 +357,111 @@ export class AnuncioDescripcion implements OnInit {
         condicion: this.fb.control<string | null>(''),
       }) as AttrsFormGroup,
     }) as DescripcionFormGroup;
+  }
+
+  private configurarValidadoresPorCategoria(categoria: CategoriaClave | null): void {
+    const attrs = this.attrsGroup;
+    const controles = attrs.controls;
+
+    Object.values(controles).forEach((control) => {
+      control.clearValidators();
+      control.updateValueAndValidity({ emitEvent: false });
+    });
+
+    attrs.clearValidators();
+    attrs.updateValueAndValidity({ emitEvent: false });
+
+    const asignar = (
+      key: keyof AttrsFormGroup['controls'],
+      validators: ValidatorFn[],
+    ) => {
+      const control = controles[key];
+      control.setValidators(validators);
+      control.updateValueAndValidity({ emitEvent: false });
+    };
+
+    switch (categoria) {
+      case 'VEHICULO': {
+        const anioMax = new Date().getFullYear() + 1;
+        asignar('marca', [Validators.required, Validators.maxLength(80)]);
+        asignar('modelo', [Validators.required, Validators.maxLength(80)]);
+        asignar('anio', [
+          Validators.required,
+          Validators.min(1900),
+          Validators.max(anioMax),
+        ]);
+        asignar('kilometraje', [Validators.required, Validators.min(0)]);
+        asignar('transmision', [Validators.required]);
+        asignar('combustible', [Validators.required]);
+        break;
+      }
+      case 'INMUEBLE': {
+        asignar('tipoPropiedad', [Validators.required]);
+        asignar('metrosCuadrados', [Validators.required, Validators.min(1)]);
+        asignar('habitaciones', [Validators.required, Validators.min(0)]);
+        asignar('banos', [Validators.required, Validators.min(0)]);
+        break;
+      }
+      case 'EMPLEO': {
+        asignar('cargo', [Validators.required, Validators.maxLength(120)]);
+        asignar('tipoContrato', [Validators.required]);
+        asignar('salarioMin', [Validators.required, Validators.min(0)]);
+        asignar('salarioMax', [Validators.required, Validators.min(0)]);
+        attrs.setValidators(this.validarRangoSalario());
+        attrs.updateValueAndValidity({ emitEvent: false });
+        break;
+      }
+      case 'SERVICIO': {
+        asignar('rubro', [Validators.required, Validators.maxLength(120)]);
+        asignar('experiencia', [Validators.required, Validators.min(0)]);
+        break;
+      }
+      case 'MARKETPLACE': {
+        asignar('condicion', [Validators.required]);
+        asignar('marca', [Validators.required, Validators.maxLength(80)]);
+        asignar('modelo', [Validators.required, Validators.maxLength(80)]);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  private validarRangoSalario(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const salarioMinCtrl = control.get('salarioMin');
+      const salarioMaxCtrl = control.get('salarioMax');
+      if (!salarioMinCtrl || !salarioMaxCtrl) {
+        return null;
+      }
+
+      const min = salarioMinCtrl.value;
+      const max = salarioMaxCtrl.value;
+
+      if (min === null || min === undefined || max === null || max === undefined) {
+        return null;
+      }
+
+      const minNumber = Number(min);
+      const maxNumber = Number(max);
+
+      if (!Number.isFinite(minNumber) || !Number.isFinite(maxNumber)) {
+        return null;
+      }
+
+      if (minNumber > maxNumber) {
+        const errors = { salarioInvalido: true };
+        salarioMaxCtrl.setErrors({ ...(salarioMaxCtrl.errors ?? {}), salarioInvalido: true });
+        return errors;
+      }
+
+      if (salarioMaxCtrl.hasError('salarioInvalido')) {
+        const { salarioInvalido, ...restoErrores } = salarioMaxCtrl.errors ?? {};
+        const nuevosErrores = Object.keys(restoErrores).length ? restoErrores : null;
+        salarioMaxCtrl.setErrors(nuevosErrores);
+      }
+
+      return null;
+    };
   }
 }
