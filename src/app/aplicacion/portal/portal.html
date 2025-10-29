@@ -38,8 +38,6 @@
             Administracion
           </button>
           }
-
-
         </nav>
 
         <div class="flex items-center gap-3">
@@ -57,10 +55,12 @@
           </button>
           }
 
-          <button type="button"
+          <button type="button" [routerLink]="'administracion/anuncios/nuevo'"
             class="rounded-full bg-linear-to-r from-emerald-400 to-lime-300 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/50 transition hover:scale-[1.02]">
             Publicar anuncio
           </button>
+
+
         </div>
       </div>
     </header>

@@ -58,7 +58,7 @@ export class AnuncioLista {
   usuario: any | null = null;
 
   listaAnuncios: MatTableDataSource<AnuncioTabla> = new MatTableDataSource<AnuncioTabla>([]);
-  displayedColumns: string[] = ['categoria', 'categoria1', 'opciones'];
+  displayedColumns: string[] = ['categoria', 'ubicacion', 'categoria1', 'opciones'];
 
   constructor(
     private fb: FormBuilder,

@@ -1,1 +1,62 @@
-<p>perfil works!</p>
+<section class="px-4 py-6 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-3xl space-y-6">
+    <header class="space-y-2">
+      <h1 class="titulo">Perfil del usuario</h1>
+      <p class="text-sm text-slate-600">Actualiza tus datos de contacto y el estado de tu cuenta.</p>
+    </header>
+
+    <form class="space-y-6" [formGroup]="registroFormGroup" (ngSubmit)="guardarPerfil()">
+      <div class="grid gap-4 text-end">
+        {{r.email.value}} <!-- Debugging line to show email value -->
+<!--         <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Correo electrónico</mat-label>
+          <input matInput formControlName="email" type="email" readonly>
+        </mat-form-field> -->
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="nombres" placeholder="Ingresa tus nombres">
+          @if (registroFormGroup.get('nombres')?.hasError('required') && registroFormGroup.get('nombres')?.touched) {
+            <mat-error>Este campo es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Apellidos</mat-label>
+          <input matInput formControlName="apellidos" placeholder="Ingresa tus apellidos">
+          @if (registroFormGroup.get('apellidos')?.hasError('required') && registroFormGroup.get('apellidos')?.touched) {
+            <mat-error>Este campo es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefono" type="tel" placeholder="Número de contacto">
+          @if (registroFormGroup.get('telefono')?.hasError('required') && registroFormGroup.get('telefono')?.touched) {
+            <mat-error>Este campo es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm">
+          <div>
+            <p class="text-sm font-medium text-slate-900">Estado de la cuenta</p>
+            <p class="text-xs text-slate-500">Desactiva tu cuenta cuando no quieras recibir anuncios.</p>
+          </div>
+          <mat-slide-toggle formControlName="activo" color="primary">
+            Cuenta activa
+          </mat-slide-toggle>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button mat-flat-button color="primary" type="submit" [disabled]="guardando">
+          {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

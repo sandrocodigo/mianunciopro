@@ -15,8 +15,9 @@
     <!-- Formulario -->
     <div
         class="w-full rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-2xl shadow-emerald-950/40 backdrop-blur-xl">
-        <form *ngIf="registroFormGroup" (ngSubmit)="onSubmit()" [formGroup]="registroFormGroup"
-            class="flex flex-col gap-10 text-slate-100">
+
+        @if(registroFormGroup) {
+        <form (ngSubmit)="onSubmit()" [formGroup]="registroFormGroup" class="flex flex-col gap-10 text-slate-100">
             <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
                 <div class="flex items-center gap-4">
                     <span
@@ -24,14 +25,18 @@
                         <span class="material-icons text-2xl">category</span>
                     </span>
                     <div class="space-y-1">
-                        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200/70">Clasificación</p>
-                        <h2 class="text-xl font-semibold">Selecciona la ruta del anuncio</h2>
-                        <p class="text-sm text-slate-400">Cada nivel se desbloquea al elegir la categoría anterior, así
-                            construyes la jerarquía completa.</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200/70">Clasificación
+                        </p>
+                        <h2 class="text-xl font-semibold">Selecciona la clasificacion del anuncio</h2>
+                        <p class="text-sm text-slate-400">
+                            Cada nivel se desbloquea al elegir la categoría anterior, así
+                            construyes la jerarquía completa.
+                        </p>
                     </div>
                 </div>
-                <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200/80">
-                    Paso 1 de 3
+                <div
+                    class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200/80">
+                    Paso 1 de 4
                 </div>
             </div>
 
@@ -92,10 +97,13 @@
                 <button color="primary" mat-flat-button type="submit"
                     class="group inline-flex items-center gap-2 rounded-full bg-linear-to-r from-emerald-400 via-emerald-500 to-lime-300 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/40 transition hover:-translate-y-0.5 hover:shadow-emerald-800/60">
                     <span>Guardar clasificación</span>
-                    <span class="material-icons text-base transition-transform duration-150 group-hover:translate-x-1">check</span>
+                    <span
+                        class="material-icons text-base transition-transform duration-150 group-hover:translate-x-1">check</span>
                 </button>
             </div>
 
         </form>
+        }
+
     </div>
 </div>

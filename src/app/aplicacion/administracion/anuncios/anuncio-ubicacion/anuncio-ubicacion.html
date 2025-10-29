@@ -1,8 +1,4 @@
-<form
-  class="mx-auto max-w-6xl space-y-8 px-6 py-8"
-  [formGroup]="registroFormGroup"
-  (ngSubmit)="onSubmit()"
->
+<form class="mx-auto max-w-6xl space-y-8 px-6 py-8" [formGroup]="registroFormGroup" (ngSubmit)="onSubmit()">
   <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <div>
       <h1 class="titulo">Ubicación del anuncio</h1>
@@ -11,14 +7,33 @@
       </p>
     </div>
     <div class="flex items-center gap-3">
-      <button
-        type="submit"
+      <button type="submit"
         class="flex h-11 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-400"
-        [disabled]="registroFormGroup.invalid && registroControl"
-      >
+        [disabled]="registroFormGroup.invalid && registroControl">
         <mat-icon class="text-base!">save</mat-icon>
         Guardar ubicación
       </button>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
+    <div class="flex items-center gap-4">
+      <span
+        class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-300 shadow-lg shadow-emerald-900/40">
+        <span class="material-icons text-2xl">add_location</span>
+      </span>
+      <div class="space-y-1">
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200/70">Ubicacion
+        </p>
+        <h2 class="text-xl font-semibold">Busca la Ubicacion del anuncio</h2>
+        <p class="text-sm text-slate-400">
+          Selecciona la ubicación exacta para que los usuarios puedan encontrar el anuncio fácilmente.
+        </p>
+      </div>
+    </div>
+    <div
+      class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200/80">
+      Paso 2 de 4
     </div>
   </div>
 
@@ -31,39 +46,29 @@
     </header>
 
     @if (mapError) {
-      <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-        {{ mapError }}
-      </div>
+    <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+      {{ mapError }}
+    </div>
     }
 
     <div class="flex flex-col gap-3 md:flex-row md:items-center">
       <label class="flex w-full flex-col gap-1 text-sm font-medium text-slate-700 md:flex-1">
         Buscar dirección
-        <input
-          #searchInput
-          type="text"
-          placeholder="Ej. Plaza Murillo, La Paz"
+        <input #searchInput type="text" placeholder="Ej. Plaza Murillo, La Paz"
           class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-          [disabled]="!!mapError"
-        />
+          [disabled]="!!mapError" />
       </label>
 
-      <button
-        type="button"
+      <button type="button"
         class="inline-flex h-12 items-center gap-2 rounded-xl border border-indigo-300 px-4 text-sm font-semibold text-indigo-600 transition hover:border-indigo-400 hover:text-indigo-500 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400"
-        (click)="usarUbicacionActual()"
-        [disabled]="solicitandoGeolocalizacion || !!mapError"
-      >
+        (click)="usarUbicacionActual()" [disabled]="solicitandoGeolocalizacion || !!mapError">
         <mat-icon class="text-base!">my_location</mat-icon>
         {{ solicitandoGeolocalizacion ? 'Obteniendo ubicación...' : 'Usar mi ubicación' }}
       </button>
     </div>
 
-    <div
-      #mapContainer
-      class="h-80 w-full overflow-hidden rounded-3xl border border-slate-200 shadow-inner"
-      [class.pointer-events-none]="!!mapError"
-    ></div>
+    <div #mapContainer class="h-80 w-full overflow-hidden rounded-3xl border border-slate-200 shadow-inner"
+      [class.pointer-events-none]="!!mapError"></div>
     <p class="text-xs text-slate-500">
       Mueve el marcador para ajustar el punto. Los campos se rellenarán automáticamente.
     </p>
@@ -83,87 +88,70 @@
     <div class="grid gap-6 md:grid-cols-2" formGroupName="ubicacion">
       <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
         Departamento
-        <input
-          type="text"
-          formControlName="departamento"
-          placeholder="Ej. La Paz"
-          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-        />
+        <input type="text" formControlName="departamento" placeholder="Ej. La Paz"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
         @if (departamentoControl.touched && departamentoControl.hasError('required')) {
-          <span class="text-xs font-normal text-rose-500">El departamento es obligatorio</span>
+        <span class="text-xs font-normal text-rose-500">El departamento es obligatorio</span>
         }
       </label>
 
       <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
         Provincia
-        <input
-          type="text"
-          formControlName="provincia"
-          placeholder="Ej. Pedro Domingo Murillo"
-          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-        />
+        <input type="text" formControlName="provincia" placeholder="Ej. Pedro Domingo Murillo"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
         @if (provinciaControl.touched && provinciaControl.hasError('required')) {
-          <span class="text-xs font-normal text-rose-500">La provincia es obligatoria</span>
+        <span class="text-xs font-normal text-rose-500">La provincia es obligatoria</span>
         }
       </label>
 
       <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
         Ciudad
-        <input
-          type="text"
-          formControlName="ciudad"
-          placeholder="Ej. El Alto"
-          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-        />
+        <input type="text" formControlName="ciudad" placeholder="Ej. El Alto"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
         @if (ciudadControl.touched && ciudadControl.hasError('required')) {
-          <span class="text-xs font-normal text-rose-500">La ciudad es obligatoria</span>
+        <span class="text-xs font-normal text-rose-500">La ciudad es obligatoria</span>
         }
       </label>
 
       <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
         Zona o barrio
-        <input
-          type="text"
-          formControlName="zona"
-          placeholder="Ej. Villa Adela"
-          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-        />
+        <input type="text" formControlName="zona" placeholder="Ej. Villa Adela"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
       </label>
 
       <div class="grid gap-6 md:col-span-2 md:grid-cols-3">
         <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
           Latitud
-          <input
-            type="number"
-            formControlName="lat"
-            placeholder="-16.5000"
-            inputmode="decimal"
+          <input type="number" formControlName="lat" placeholder="-16.5000" inputmode="decimal"
             class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-            readonly
-          />
+            readonly />
         </label>
         <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
           Longitud
-          <input
-            type="number"
-            formControlName="lng"
-            placeholder="-68.1500"
-            inputmode="decimal"
+          <input type="number" formControlName="lng" placeholder="-68.1500" inputmode="decimal"
             class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-            readonly
-          />
+            readonly />
         </label>
         <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
           Geohash
-          <input
-            type="text"
-            formControlName="geohash"
-            placeholder="c2b0p0xyz"
+          <input type="text" formControlName="geohash" placeholder="c2b0p0xyz"
             class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-            readonly
-          />
+            readonly />
         </label>
       </div>
     </div>
   </section>
+
+  <div class="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
+    <div class="text-sm text-slate-400">
+      Completa todos los datos de la ubicacion para que tu anuncio aparezca en las búsquedas
+    </div>
+    <button color="primary" mat-flat-button type="submit"
+      class="group inline-flex items-center gap-2 rounded-full bg-linear-to-r from-emerald-400 via-emerald-500 to-lime-300 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/40 transition hover:-translate-y-0.5 hover:shadow-emerald-800/60">
+      <span>Guardar ubicación</span>
+      <span class="material-icons text-base transition-transform duration-150 group-hover:translate-x-1">check</span>
+    </button>
+  </div>
+
+
 </form>

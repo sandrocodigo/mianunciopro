@@ -65,21 +65,19 @@ export class AnuncioNuevo implements OnInit {
     this.authServicio.user$.subscribe((user) => {
       if (user) {
         this.usuario = user;
-
-        this.registroFormGroup = this.fb.group({
-          categoria: [null, [Validators.required]],
-          categoria1: [null, [Validators.required]],
-          categoria2: [null],
-          categoria3: [null],
-
-          usuario: [this.usuario.email],
-          publicado: [false],
-          activo: [true]
-        });
       }
     });
 
+    this.registroFormGroup = this.fb.group({
+      categoria: [null, [Validators.required]],
+      categoria1: [null, [Validators.required]],
+      categoria2: [null],
+      categoria3: [null],
 
+      // usuario: [this.usuario.email],
+      publicado: [false],
+      activo: [true]
+    });
   }
 
   ngOnInit(): void {

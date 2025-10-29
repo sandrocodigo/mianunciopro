@@ -27,11 +27,9 @@ export class UsuarioService {
 
   constructor(private firestore: Firestore, private auth: AuthService) { }
 
-
   // CREAR
   async crear(datos: any) {
     const docRef = await addDoc(collection(this.firestore, `${this.url}`), datos);
-    console.log('PROYECTO NUEVO: ', docRef.id);
     return docRef;
   }
 

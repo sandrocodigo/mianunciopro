@@ -48,6 +48,7 @@ export class AnuncioService {
     const payload = {
       ...datos,
 
+      usuario: this.usuario.email,
       registroUsuario: this.usuario.email,
       registroFecha: serverTimestamp(),
     };
