@@ -30,7 +30,31 @@
   } @else {
   <div class="overflow-x-auto">
 
-    <table mat-table [dataSource]="listaAnuncios" class="w-full min-w-[640px] mat-elevation-z2 rounded-2xl">
+    <table mat-table [dataSource]="listaAnuncios" class="w-full min-w-[720px] mat-elevation-z2 rounded-2xl">
+      <ng-container matColumnDef="imagen">
+        <th mat-header-cell *matHeaderCellDef
+          class="text-left text-sm font-semibold uppercase tracking-wide text-slate-500">
+          Imagen
+        </th>
+        <td mat-cell *matCellDef="let anuncio" class="py-4">
+          @let miniatura = anuncio.fotos && anuncio.fotos.length ? anuncio.fotos[0] : null;
+          <div class="flex justify-center">
+            @if (miniatura) {
+              <img
+                [src]="miniatura"
+                alt="Miniatura de {{ anuncio.titulo || 'anuncio' }}"
+                class="h-14 w-20 rounded-xl border border-slate-200 object-cover shadow-sm"
+              />
+            } @else {
+              <div
+                class="flex h-14 w-20 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 text-slate-400">
+                <mat-icon class="text-base!">image_not_supported</mat-icon>
+              </div>
+            }
+          </div>
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="categoria">
         <th mat-header-cell *matHeaderCellDef
           class="text-left text-sm font-semibold uppercase tracking-wide text-slate-500">

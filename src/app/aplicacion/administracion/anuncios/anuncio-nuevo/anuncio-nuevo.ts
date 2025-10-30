@@ -75,6 +75,10 @@ export class AnuncioNuevo implements OnInit {
       categoria3: [null],
 
       // usuario: [this.usuario.email],
+      
+      vistas: [0],
+      favorito: [0],
+      
       publicado: [false],
       activo: [true]
     });

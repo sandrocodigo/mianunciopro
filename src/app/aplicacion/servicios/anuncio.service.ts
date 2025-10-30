@@ -18,7 +18,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable, catchError, map, of } from 'rxjs';
 
-import { Anuncio, TipoAnuncio } from '../modelos/anuncio';
+import { Anuncio, Categorias } from '../modelos/anuncio';
 import { AuthService } from './auth.service';
 
 export type CrearAnuncioPayload = Omit<Anuncio, 'id' | 'createdAt' | 'updatedAt'>;
@@ -71,7 +71,7 @@ export class AnuncioService {
   async crear(anuncio: CrearAnuncioPayload): Promise<string> {
     const payload = {
       ...anuncio,
-      attrs: this.normalizarAttrs(anuncio.tipo, anuncio.attrs),
+      attrs: this.normalizarAttrs(anuncio.categoria, anuncio.attrs),
       fotos: (anuncio.fotos ?? []).filter((url) => url && url.trim().length > 0),
       views: anuncio.views ?? 0,
       favoritosCount: anuncio.favoritosCount ?? 0,
@@ -91,8 +91,8 @@ export class AnuncioService {
       updatedAt: serverTimestamp(),
     };
 
-    if (cambios.tipo && cambios.attrs) {
-      payload['attrs'] = this.normalizarAttrs(cambios.tipo as TipoAnuncio, cambios.attrs);
+    if (cambios.categoria && cambios.attrs) {
+      payload['attrs'] = this.normalizarAttrs(cambios.categoria as Categorias, cambios.attrs);
     }
 
     if (cambios.fotos) {
@@ -148,11 +148,11 @@ export class AnuncioService {
       ...data,
       id,
     } as Anuncio;
-    anuncio.attrs = this.normalizarAttrs(anuncio.tipo, anuncio.attrs);
+    anuncio.attrs = this.normalizarAttrs(anuncio.categoria, anuncio.attrs);
     return anuncio;
   }
 
-  private normalizarAttrs(tipo: TipoAnuncio, attrs: unknown): Record<string, unknown> {
+  private normalizarAttrs(tipo: Categorias, attrs: unknown): Record<string, unknown> {
     const datos = (attrs ?? {}) as Record<string, unknown>;
 
     const limpiar = (valor: unknown) => {
@@ -163,7 +163,7 @@ export class AnuncioService {
     };
 
     switch (tipo) {
-      case 'VEHICULO':
+      case 'VEHICULOS':
         return {
           marca: limpiar(datos['marca']),
           modelo: limpiar(datos['modelo']),
@@ -172,7 +172,7 @@ export class AnuncioService {
           transmision: limpiar(datos['transmision']),
           combustible: limpiar(datos['combustible']),
         };
-      case 'INMUEBLE':
+      case 'INMUEBLES':
         return {
           tipoPropiedad: limpiar(datos['tipoPropiedad']),
           metrosCuadrados: limpiar(this.aNumero(datos['metrosCuadrados'])),
@@ -180,14 +180,14 @@ export class AnuncioService {
           banos: limpiar(this.aNumero(datos['banos'])),
           amoblado: limpiar(datos['amoblado']),
         };
-      case 'EMPLEO':
+      case 'EMPLEOS':
         return {
           cargo: limpiar(datos['cargo']),
           tipoContrato: limpiar(datos['tipoContrato']),
           salarioMin: limpiar(this.aNumero(datos['salarioMin'])),
           salarioMax: limpiar(this.aNumero(datos['salarioMax'])),
         };
-      case 'SERVICIO':
+      case 'SERVICIOS':
         return {
           rubro: limpiar(datos['rubro']),
           experiencia: limpiar(this.aNumero(datos['experiencia'])),

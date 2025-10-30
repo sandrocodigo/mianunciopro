@@ -1,5 +1,5 @@
 export type Moneda = 'BOB' | 'USD'; // simplifica y evita errores
-export type TipoAnuncio = 'VEHICULO' | 'INMUEBLE' | 'EMPLEO' | 'SERVICIO' | 'MARKETPLACE';
+export type Categorias = 'VEHICULOS' | 'INMUEBLES' | 'EMPLEOS'| 'SERVICIOS' | 'MARKETPLACE';
 
 export interface Ubicacion {
     departamento: string;      // "La Paz"
@@ -13,10 +13,11 @@ export interface Ubicacion {
 
 export interface BaseAnuncio {
     id: string;
-    tipo: TipoAnuncio;
 
-    categoria: string;         // p.ej. "Vehículos"
-    subcategoria: string;      // p.ej. "Automóviles"
+    categoria: Categorias;         // p.ej. "Vehículos"
+    categoria1?: string;
+    categoria2?: string;
+    categoria3?: string;
 
     titulo: string;
     descripcion: string;
@@ -33,6 +34,8 @@ export interface BaseAnuncio {
     // control/estado
     estado: 'publicado' | 'pendiente' | 'pausado' | 'eliminado';
     destacado?: { activo: boolean; venceAt?: any /* Timestamp */ };
+    publicado?: boolean;
+    publicadoFecha?: any;
 
     // métricas
     views?: number;
@@ -85,10 +88,8 @@ export interface AttrsMarketplace {
 }
 
 export type Anuncio =
-    | (BaseAnuncio & { tipo: 'VEHICULO'; attrs: AttrsVehiculo })
-    | (BaseAnuncio & { tipo: 'INMUEBLE'; attrs: AttrsInmueble })
-    | (BaseAnuncio & { tipo: 'EMPLEO'; attrs: AttrsEmpleo })
-    | (BaseAnuncio & { tipo: 'SERVICIO'; attrs: AttrsServicio })
-    | (BaseAnuncio & { tipo: 'MARKETPLACE'; attrs: AttrsMarketplace });
-
-
+    | (BaseAnuncio & { categoria: 'VEHICULOS'; attrs: AttrsVehiculo })
+    | (BaseAnuncio & { categoria: 'INMUEBLES'; attrs: AttrsInmueble })
+    | (BaseAnuncio & { categoria: 'EMPLEOS'; attrs: AttrsEmpleo })
+    | (BaseAnuncio & { categoria: 'SERVICIOS'; attrs: AttrsServicio })
+    | (BaseAnuncio & { categoria: 'MARKETPLACE'; attrs: AttrsMarketplace });

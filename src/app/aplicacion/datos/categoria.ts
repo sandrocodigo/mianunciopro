@@ -3,7 +3,7 @@ export const categorias = [
     id: 'VEHICULOS',
     descripcion: 'Vehículos',
     icono: 'directions_car',
-    subcategoria: [
+    subcategorias: [
       { id: 'AUTOS_USADOS', descripcion: 'Autos Usados' },
       { id: 'AUTOS_NUEVOS', descripcion: 'Autos Nuevos' },
       { id: 'MOTOS', descripcion: 'Motos' },
@@ -12,15 +12,15 @@ export const categorias = [
       {
         id: 'PIEZAS_ACCESORIOS',
         descripcion: 'Piezas y Accesorios',
-        subcategoria: [
+        subcategorias: [
           { id: 'CHASIS_PARTES_EXTERNAS', descripcion: 'Chasis y Partes Externas' },
           {
             id: 'EQUIPO_MUSICA',
             descripcion: 'Equipo de Música',
-            subcategoria: [
-              { id: '5.1', descripcion: '5.1' },
-              { id: '7.1', descripcion: '7.1' },
-            ]
+            subcategorias: [
+              { id: 'EQUIPO_5_1', descripcion: '5.1' },
+              { id: 'EQUIPO_7_1', descripcion: '7.1' },
+            ],
           },
           { id: 'LLANTAS_RUEDAS', descripcion: 'Llantas y Ruedas' },
           { id: 'MOTORES_TRANSMISION', descripcion: 'Motores y Transmisión' },
@@ -30,15 +30,16 @@ export const categorias = [
       },
     ],
   },
+
   {
     id: 'INMUEBLES',
     descripcion: 'Bienes Raíces',
     icono: 'apartment',
-    subcategoria: [
+    subcategorias: [
       {
         id: 'VENTA',
         descripcion: 'Venta',
-        subcategoria: [
+        subcategorias: [
           { id: 'CASAS', descripcion: 'Venta de Casas' },
           { id: 'APARTAMENTOS', descripcion: 'Apartamentos' },
           { id: 'TERRENOS', descripcion: 'Terrenos' },
@@ -48,72 +49,117 @@ export const categorias = [
       {
         id: 'ALQUILER',
         descripcion: 'Alquiler',
-        subcategoria: [
-          { id: 'CASAS', descripcion: 'Casas en Alquiler' },
-          { id: 'APARTAMENTOS', descripcion: 'Apartamentos en Alquiler' },
-          { id: 'OFICINAS', descripcion: 'Oficinas y Locales Comerciales' },
-          { id: 'CUARTOS', descripcion: 'Cuartos o Habitaciones' },
+        subcategorias: [
+          { id: 'CASAS_ALQUILER', descripcion: 'Casas en Alquiler' },
+          { id: 'APARTAMENTOS_ALQUILER', descripcion: 'Apartamentos en Alquiler' },
+          { id: 'OFICINAS_LOCALES', descripcion: 'Oficinas y Locales Comerciales' },
+          { id: 'CUARTOS_HABITACIONES', descripcion: 'Cuartos o Habitaciones' },
         ],
       },
       {
         id: 'ALQUILER_VACACIONAL',
         descripcion: 'Alquiler Vacacional',
-        subcategoria: [
-          { id: 'CASAS', descripcion: 'Casas Vacacionales' },
-          { id: 'DEPARTAMENTOS', descripcion: 'Departamentos de Playa' },
+        subcategorias: [
+          { id: 'CASAS_VACACIONALES', descripcion: 'Casas Vacacionales' },
+          { id: 'DEPARTAMENTOS_PLAYA', descripcion: 'Departamentos de Playa' },
         ],
       },
     ],
   },
+
+  //
+  // EMPLEOS: solo laboral
+  //
   {
-    id: 'EMPLEOS_SERVICIOS',
-    descripcion: 'Empleos y Servicios',
+    id: 'EMPLEOS',
+    descripcion: 'Empleos',
     icono: 'work',
-    subcategoria: [
+    subcategorias: [
       {
         id: 'OFERTAS_TRABAJO',
         descripcion: 'Ofertas de Trabajo',
-        subcategoria: [
+        subcategorias: [
           { id: 'TIEMPO_COMPLETO', descripcion: 'Tiempo Completo' },
           { id: 'MEDIO_TIEMPO', descripcion: 'Medio Tiempo' },
-          { id: 'FREELANCE', descripcion: 'Freelance / Remoto' },
+          { id: 'FREELANCE_REMOTO', descripcion: 'Freelance / Remoto' },
+          { id: 'PRACTICAS_PASANTIAS', descripcion: 'Prácticas y Pasantías' },
         ],
       },
-      { id: 'HOJA_VIDA', descripcion: 'Publicar Hoja de Vida' },
       {
-        id: 'CURSOS_EDUCACION',
-        descripcion: 'Cursos y Educación',
-        subcategoria: [
+        id: 'HOJA_VIDA',
+        descripcion: 'Publicar Hoja de Vida',
+      },
+      {
+        id: 'CURSOS_CAPACITACION',
+        descripcion: 'Cursos y Capacitación',
+        subcategorias: [
           { id: 'IDIOMAS_TRADUCCION', descripcion: 'Idiomas y Traducción' },
           { id: 'ARTE_MUSICA', descripcion: 'Arte, Danza y Música' },
           { id: 'OTROS_CURSOS', descripcion: 'Otros Cursos' },
           { id: 'TECNICOS_INFORMATICA', descripcion: 'Técnicos / Informática' },
         ],
       },
+    ],
+  },
+
+  //
+  // SERVICIOS: lo que alguien ofrece (no empleo)
+  //
+  {
+    id: 'SERVICIOS',
+    descripcion: 'Servicios',
+    icono: 'handyman',
+    subcategorias: [
       {
-        id: 'SERVICIOS_NEGOCIOS',
-        descripcion: 'Servicios y Negocios',
-        subcategoria: [
-          { id: 'CONSTRUCCION', descripcion: 'Construcción y Remodelación' },
-          { id: 'TRANSPORTE', descripcion: 'Transporte y Mudanzas' },
+        id: 'SERVICIOS_HOGAR',
+        descripcion: 'Hogar y Mantenimiento',
+        subcategorias: [
           { id: 'LIMPIEZA', descripcion: 'Limpieza y Mantenimiento' },
-          { id: 'REPARACIONES', descripcion: 'Reparaciones Técnicas' },
+          { id: 'PLOMERIA', descripcion: 'Plomería' },
+          { id: 'ELECTRICIDAD', descripcion: 'Electricidad' },
+          { id: 'JARDINERIA', descripcion: 'Jardinería' },
+        ],
+      },
+      {
+        id: 'CONSTRUCCION',
+        descripcion: 'Construcción y Remodelación',
+        subcategorias: [
+          { id: 'ALBANILERIA', descripcion: 'Albañilería' },
+          { id: 'PINTURA', descripcion: 'Pintura' },
+          { id: 'CARPINTERIA', descripcion: 'Carpintería' },
+        ],
+      },
+      {
+        id: 'TRANSPORTE',
+        descripcion: 'Transporte y Mudanzas',
+        subcategorias: [
+          { id: 'MUDANZAS', descripcion: 'Mudanzas' },
+          { id: 'CARGA', descripcion: 'Transporte de Carga' },
+        ],
+      },
+      {
+        id: 'SERVICIOS_EMPRESARIALES',
+        descripcion: 'Servicios Empresariales',
+        subcategorias: [
           { id: 'MARKETING', descripcion: 'Publicidad y Marketing' },
+          { id: 'DISENO_WEB', descripcion: 'Diseño y Desarrollo Web' },
+          { id: 'CONTABILIDAD', descripcion: 'Contabilidad y Tributación' },
         ],
       },
     ],
   },
+
   {
     id: 'MARKETPLACE',
     descripcion: 'Marketplace',
     icono: 'storefront',
-    subcategoria: [
+    subcategorias: [
       {
         id: 'TECNOLOGIA',
         descripcion: 'Tecnología',
-        subcategoria: [
+        subcategorias: [
           { id: 'TELEFONOS_CELULARES', descripcion: 'Teléfonos Celulares' },
-          { id: 'ELECTRONICOS_VESTIBLES', descripcion: 'Dispositivos Electrónicos Vestibles' },
+          { id: 'ELECTRONICOS_VESTIBLES', descripcion: 'Dispositivos Vestibles' },
           { id: 'DOMOTICA', descripcion: 'Domótica y Casa Inteligente' },
           { id: 'AUDIO_VIDEO_FOTO', descripcion: 'Audio, Video y Fotografía' },
           { id: 'COMPUTACION', descripcion: 'Computadoras y Accesorios' },
@@ -122,7 +168,7 @@ export const categorias = [
       {
         id: 'MERCANCIA_MAYORISTA',
         descripcion: 'Mercancía Mayorista',
-        subcategoria: [
+        subcategorias: [
           { id: 'SE_VENDE', descripcion: 'Se Vende' },
           { id: 'YO_BUSCO', descripcion: 'Yo Busco' },
         ],
@@ -130,7 +176,7 @@ export const categorias = [
       {
         id: 'CONSTRUCCION',
         descripcion: 'Construcción',
-        subcategoria: [
+        subcategorias: [
           { id: 'HERRAMIENTAS', descripcion: 'Herramientas y Materiales' },
           { id: 'MAQUINARIA', descripcion: 'Maquinaria y Equipos' },
         ],
@@ -138,7 +184,7 @@ export const categorias = [
       {
         id: 'MUEBLES_HOGAR',
         descripcion: 'Muebles, Hogar y Jardín',
-        subcategoria: [
+        subcategorias: [
           { id: 'MUEBLES_INTERIOR', descripcion: 'Muebles de Interior' },
           { id: 'COCINA', descripcion: 'Cocina y Electrodomésticos' },
           { id: 'JARDIN', descripcion: 'Jardín y Exterior' },
@@ -148,4 +194,3 @@ export const categorias = [
     ],
   },
 ];
-
