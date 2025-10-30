@@ -137,9 +137,7 @@ export class AnuncioNuevo implements OnInit {
     }
 
     const categoriaSeleccionada = this.listaCategorias.find((cat) => cat.id === categoriaId);
-    if (categoriaSeleccionada?.subcategoria) {
-      this.listaCategorias1 = categoriaSeleccionada.subcategoria;
-    }
+    this.listaCategorias1 = this.obtenerSubcategorias(categoriaSeleccionada);
   }
 
   private actualizarNivel2(categoriaId: string | null, resetValor = true): void {
@@ -154,9 +152,7 @@ export class AnuncioNuevo implements OnInit {
     }
 
     const categoriaSeleccionada = this.listaCategorias1.find((cat) => cat.id === categoriaId);
-    if (categoriaSeleccionada?.subcategoria) {
-      this.listaCategorias2 = categoriaSeleccionada.subcategoria;
-    }
+    this.listaCategorias2 = this.obtenerSubcategorias(categoriaSeleccionada);
   }
 
   private actualizarNivel3(categoriaId: string | null, resetValor = true): void {
@@ -170,9 +166,7 @@ export class AnuncioNuevo implements OnInit {
     }
 
     const categoriaSeleccionada = this.listaCategorias2.find((cat) => cat.id === categoriaId);
-    if (categoriaSeleccionada?.subcategoria) {
-      this.listaCategorias3 = categoriaSeleccionada.subcategoria;
-    }
+    this.listaCategorias3 = this.obtenerSubcategorias(categoriaSeleccionada);
   }
 
   private resetNivel2(resetearValor = true): void {
@@ -188,6 +182,20 @@ export class AnuncioNuevo implements OnInit {
     if (resetearValor) {
       this.r.categoria3.setValue(null, { emitEvent: false });
     }
+  }
+
+  private obtenerSubcategorias(categoria: { subcategoria?: unknown; subcategorias?: unknown } | undefined): any[] {
+    if (!categoria) {
+      return [];
+    }
+
+    const posiblesListas = [
+      categoria.subcategorias,
+      categoria.subcategoria,
+    ];
+
+    const listaValida = posiblesListas.find((valor) => Array.isArray(valor));
+    return Array.isArray(listaValida) ? listaValida : [];
   }
 
 
