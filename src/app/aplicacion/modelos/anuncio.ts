@@ -21,6 +21,7 @@ export interface BaseAnuncio {
 
     titulo: string;
     descripcion: string;
+    urlAnuncio: string;    
 
     precio: number;            // usa entero si quieres evitar decimales (p.ej. centavos)
     moneda: Moneda;
@@ -34,6 +35,7 @@ export interface BaseAnuncio {
     // control/estado
     estado: 'publicado' | 'pendiente' | 'pausado' | 'eliminado';
     destacado?: { activo: boolean; venceAt?: any /* Timestamp */ };
+    
     publicado?: boolean;
     publicadoFecha?: any;
 

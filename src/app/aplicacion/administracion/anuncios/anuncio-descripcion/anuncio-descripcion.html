@@ -1,4 +1,382 @@
-@if (cargando) {
+<div class="flex flex-wrap gap-6">
+
+  <div
+    class="w-full rounded-3xl border border-white/10 bg-slate-900/70 p-3 shadow-2xl shadow-emerald-950/40 backdrop-blur-xl">
+
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
+      <div class="flex items-center gap-4">
+        <span
+          class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-300 shadow-lg shadow-emerald-900/40">
+          <span class="material-icons text-2xl">category</span>
+        </span>
+        <div class="space-y-1">
+          <p class="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200/70">Descripción
+          </p>
+          <h2 class="titulo">Describe la descripción del anuncio</h2>
+          <p class="text-sm text-slate-400">
+            Completa los campos para que los usuarios conozcan mejor el anuncio.
+          </p>
+        </div>
+      </div>
+      <div
+        class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200/80">
+        Paso 3 de 4
+      </div>
+    </div>
+
+    <header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div>
+
+      </div>
+      <span
+        class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-600">
+        <mat-icon class="text-base!">category</mat-icon>
+        {{ categoriaSeleccionadaLabel }}
+      </span>
+    </header>
+
+
+    <form class="mx-auto max-w-4xl space-y-8 py-6 md:px-0" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+        <header>
+          <h2 class="text-lg font-semibold text-slate-800">Información general</h2>
+          <p class="text-sm text-slate-500">Mejora el título y la descripción para destacar tu anuncio.</p>
+        </header>
+
+        @let tituloControl = controles.titulo;
+        @let descripcionControl = controles.descripcion;
+
+        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          Título
+          <input type="text" formControlName="titulo" placeholder="Escribe un título atractivo"
+            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+          <span class="ml-auto text-xs font-normal text-slate-400">{{ tituloControl.value?.length ?? 0 }}/120</span>
+          @if (tituloControl.touched && tituloControl.hasError('required')) {
+          <span class="text-xs font-normal text-rose-500">El título es obligatorio</span>
+          }
+        </label>
+
+        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          Descripción
+          <textarea formControlName="descripcion" rows="6"
+            placeholder="Describe las características, beneficios y condiciones del anuncio"
+            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"></textarea>
+          <span class="ml-auto text-xs font-normal text-slate-400">{{ descripcionControl.value?.length ?? 0
+            }}/2000</span>
+          @if (descripcionControl.touched && descripcionControl.hasError('required')) {
+          <span class="text-xs font-normal text-rose-500">La descripción es obligatoria</span>
+          }
+        </label>
+      </section>
+
+      <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm" formGroupName="attrs">
+        <header>
+          <h2 class="text-lg font-semibold text-slate-800">Detalles específicos</h2>
+          <p class="text-sm text-slate-500">
+            Completa los campos correspondientes según la categoría seleccionada.
+          </p>
+        </header>
+
+        <ng-container [ngSwitch]="currentCategoriaClave">
+          <div *ngSwitchCase="'VEHICULO'" class="grid gap-6 md:grid-cols-2">
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let marcaControl = attrsGroup.get('marca');
+              Marca
+              <input type="text" formControlName="marca" placeholder="Ej. Toyota"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (marcaControl?.touched && marcaControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">La marca es obligatoria.</span>
+              }
+              @if (marcaControl?.touched && marcaControl?.hasError('maxlength')) {
+              <span class="text-xs font-normal text-rose-500">Máximo 80 caracteres.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let modeloControl = attrsGroup.get('modelo');
+              Modelo
+              <input type="text" formControlName="modelo" placeholder="Ej. Corolla"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (modeloControl?.touched && modeloControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">El modelo es obligatorio.</span>
+              }
+              @if (modeloControl?.touched && modeloControl?.hasError('maxlength')) {
+              <span class="text-xs font-normal text-rose-500">Máximo 80 caracteres.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let anioControl = attrsGroup.get('anio');
+              Año
+              <input type="number" formControlName="anio" placeholder="2022"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (anioControl?.touched && anioControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">El año es obligatorio.</span>
+              }
+              @if (anioControl?.touched && (anioControl?.hasError('min') || anioControl?.hasError('max'))) {
+              <span class="text-xs font-normal text-rose-500">Ingresa un año válido.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let kilometrajeControl = attrsGroup.get('kilometraje');
+              Kilometraje
+              <input type="number" formControlName="kilometraje" placeholder="45000"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (kilometrajeControl?.touched && kilometrajeControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">El kilometraje es obligatorio.</span>
+              }
+              @if (kilometrajeControl?.touched && kilometrajeControl?.hasError('min')) {
+              <span class="text-xs font-normal text-rose-500">Debe ser un número positivo.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let transmisionControl = attrsGroup.get('transmision');
+              Transmisión
+              <select formControlName="transmision"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                <option value="">Selecciona</option>
+                @for (transmision of transmisionOpciones; track transmision.value) {
+                <option [value]="transmision.value">{{ transmision.label }}</option>
+                }
+              </select>
+              @if (transmisionControl?.touched && transmisionControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Selecciona la transmisión.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let combustibleControl = attrsGroup.get('combustible');
+              Combustible
+              <select formControlName="combustible"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                <option value="">Selecciona</option>
+                @for (combustible of combustibleOpciones; track combustible.value) {
+                <option [value]="combustible.value">{{ combustible.label }}</option>
+                }
+              </select>
+              @if (combustibleControl?.touched && combustibleControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Selecciona el tipo de combustible.</span>
+              }
+            </label>
+          </div>
+
+          <div *ngSwitchCase="'INMUEBLE'" class="grid gap-6 md:grid-cols-2">
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let tipoPropiedadControl = attrsGroup.get('tipoPropiedad');
+              Tipo de propiedad
+              <select formControlName="tipoPropiedad"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                <option value="">Selecciona</option>
+                @for (tipo of tipoPropiedadOpciones; track tipo.value) {
+                <option [value]="tipo.value">{{ tipo.label }}</option>
+                }
+              </select>
+              @if (tipoPropiedadControl?.touched && tipoPropiedadControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Selecciona el tipo de propiedad.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let metrosCuadradosControl = attrsGroup.get('metrosCuadrados');
+              Metros cuadrados
+              <input type="number" formControlName="metrosCuadrados" placeholder="120"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (metrosCuadradosControl?.touched && metrosCuadradosControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Indica los metros cuadrados.</span>
+              }
+              @if (metrosCuadradosControl?.touched && metrosCuadradosControl?.hasError('min')) {
+              <span class="text-xs font-normal text-rose-500">Debe ser mayor a 0.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let habitacionesControl = attrsGroup.get('habitaciones');
+              Habitaciones
+              <input type="number" formControlName="habitaciones" placeholder="3"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (habitacionesControl?.touched && habitacionesControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Indica la cantidad de habitaciones.</span>
+              }
+              @if (habitacionesControl?.touched && habitacionesControl?.hasError('min')) {
+              <span class="text-xs font-normal text-rose-500">No puede ser negativo.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let banosControl = attrsGroup.get('banos');
+              Baños
+              <input type="number" formControlName="banos" placeholder="2"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (banosControl?.touched && banosControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Indica la cantidad de baños.</span>
+              }
+              @if (banosControl?.touched && banosControl?.hasError('min')) {
+              <span class="text-xs font-normal text-rose-500">No puede ser negativo.</span>
+              }
+            </label>
+            <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
+              <input type="checkbox" formControlName="amoblado"
+                class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+              Propiedad amoblada
+            </label>
+          </div>
+
+          <div *ngSwitchCase="'EMPLEO'" class="grid gap-6 md:grid-cols-2">
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let cargoControl = attrsGroup.get('cargo');
+              Cargo
+              <input type="text" formControlName="cargo" placeholder="Ej. Desarrollador Frontend"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (cargoControl?.touched && cargoControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">El cargo es obligatorio.</span>
+              }
+              @if (cargoControl?.touched && cargoControl?.hasError('maxlength')) {
+              <span class="text-xs font-normal text-rose-500">Máximo 120 caracteres.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let tipoContratoControl = attrsGroup.get('tipoContrato');
+              Tipo de contrato
+              <select formControlName="tipoContrato"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                <option value="">Selecciona</option>
+                @for (tipo of tipoContratoOpciones; track tipo.value) {
+                <option [value]="tipo.value">{{ tipo.label }}</option>
+                }
+              </select>
+              @if (tipoContratoControl?.touched && tipoContratoControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Selecciona el tipo de contrato.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let salarioMinControl = attrsGroup.get('salarioMin');
+              Salario mínimo
+              <input type="number" formControlName="salarioMin" placeholder="4000"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (salarioMinControl?.touched && salarioMinControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Indica el salario mínimo.</span>
+              }
+              @if (salarioMinControl?.touched && salarioMinControl?.hasError('min')) {
+              <span class="text-xs font-normal text-rose-500">Debe ser mayor o igual a 0.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let salarioMaxControl = attrsGroup.get('salarioMax');
+              Salario máximo
+              <input type="number" formControlName="salarioMax" placeholder="8000"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (salarioMaxControl?.touched && salarioMaxControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Indica el salario máximo.</span>
+              }
+              @if (salarioMaxControl?.touched && salarioMaxControl?.hasError('min')) {
+              <span class="text-xs font-normal text-rose-500">Debe ser mayor o igual a 0.</span>
+              }
+              @if (salarioMaxControl?.touched && salarioMaxControl?.hasError('salarioInvalido')) {
+              <span class="text-xs font-normal text-rose-500">Debe ser mayor o igual al salario mínimo.</span>
+              }
+            </label>
+          </div>
+
+          <div *ngSwitchCase="'SERVICIO'" class="grid gap-6 md:grid-cols-2">
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let rubroControl = attrsGroup.get('rubro');
+              Rubro
+              <input type="text" formControlName="rubro" placeholder="Ej. Plomería, Marketing..."
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (rubroControl?.touched && rubroControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">El rubro es obligatorio.</span>
+              }
+              @if (rubroControl?.touched && rubroControl?.hasError('maxlength')) {
+              <span class="text-xs font-normal text-rose-500">Máximo 120 caracteres.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let experienciaControl = attrsGroup.get('experiencia');
+              Experiencia (años)
+              <input type="number" formControlName="experiencia" placeholder="5"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (experienciaControl?.touched && experienciaControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Indica los años de experiencia.</span>
+              }
+              @if (experienciaControl?.touched && experienciaControl?.hasError('min')) {
+              <span class="text-xs font-normal text-rose-500">Debe ser mayor o igual a 0.</span>
+              }
+            </label>
+          </div>
+
+          <div *ngSwitchCase="'MARKETPLACE'" class="grid gap-6 md:grid-cols-2">
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let condicionControl = attrsGroup.get('condicion');
+              Condición
+              <select formControlName="condicion"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                <option value="">Selecciona</option>
+                @for (condicion of condicionOpciones; track condicion.value) {
+                <option [value]="condicion.value">{{ condicion.label }}</option>
+                }
+              </select>
+              @if (condicionControl?.touched && condicionControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">Selecciona la condición del producto.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let marcaMarketplaceControl = attrsGroup.get('marca');
+              Marca
+              <input type="text" formControlName="marca" placeholder="Ej. Samsung"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (marcaMarketplaceControl?.touched && marcaMarketplaceControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">La marca es obligatoria.</span>
+              }
+              @if (marcaMarketplaceControl?.touched && marcaMarketplaceControl?.hasError('maxlength')) {
+              <span class="text-xs font-normal text-rose-500">Máximo 80 caracteres.</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+              @let modeloMarketplaceControl = attrsGroup.get('modelo');
+              Modelo
+              <input type="text" formControlName="modelo" placeholder="Ej. Galaxy S24"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              @if (modeloMarketplaceControl?.touched && modeloMarketplaceControl?.hasError('required')) {
+              <span class="text-xs font-normal text-rose-500">El modelo es obligatorio.</span>
+              }
+              @if (modeloMarketplaceControl?.touched && modeloMarketplaceControl?.hasError('maxlength')) {
+              <span class="text-xs font-normal text-rose-500">Máximo 80 caracteres.</span>
+              }
+            </label>
+          </div>
+        </ng-container>
+      </section>
+
+      <div class="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
+        <!--         <button type="button"
+          class="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:text-slate-500"
+          [routerLink]="['/administracion/anuncios/detalle', idAnuncio ?? '']">
+          <mat-icon class="text-base!">visibility</mat-icon>
+          Ver detalle
+        </button> -->
+
+        <button type="button"
+          class="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:text-slate-500"
+          [routerLink]="['/administracion/anuncios/ubicacion', idAnuncio ?? '']">
+          <mat-icon class="text-base!">arrow_back</mat-icon>
+          Ver Ubicacion
+        </button>
+
+        <div class="text-sm text-slate-400">
+          Completa todos los datos de la descripcion
+        </div>
+        <button color="primary" mat-flat-button type="submit"
+          class="group inline-flex items-center gap-2 rounded-full bg-linear-to-r from-emerald-400 via-emerald-500 to-lime-300 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/40 transition hover:-translate-y-0.5 hover:shadow-emerald-800/60">
+          <span>Guardar descripcion</span>
+          <span class="material-icons text-base transition-transform duration-150 group-hover:translate-x-1">save</span>
+        </button>
+      </div>
+
+
+    </form>
+
+
+  </div>
+</div>
+
+
+
+<!-- @if (cargando) {
 <section class="mx-auto max-w-4xl rounded-3xl border border-slate-200 bg-white/90 px-6 py-10 text-center shadow-sm">
   <h2 class="text-lg font-semibold text-slate-700">Cargando información del anuncio...</h2>
   <p class="mt-2 text-sm text-slate-500">
@@ -19,359 +397,6 @@
   </button>
 </section>
 } @else {
-<form class="mx-auto max-w-4xl space-y-8 px-4 py-6 md:px-0" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-    <div>
-      <h1 class="titulo">Descripción del anuncio</h1>
-      <p class="text-sm text-slate-500">
-        Actualiza el contenido y los detalles específicos para la categoría seleccionada.
-      </p>
-    </div>
-    <span
-      class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-600">
-      <mat-icon class="text-base!">category</mat-icon>
-      {{ categoriaSeleccionadaLabel }}
-    </span>
-  </header>
 
-  <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
-    <div class="flex items-center gap-4">
-      <span
-        class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-300 shadow-lg shadow-emerald-900/40">
-        <span class="material-icons text-2xl">category</span>
-      </span>
-      <div class="space-y-1">
-        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200/70">Descripción
-        </p>
-        <h2 class="text-xl font-semibold">Describe la descripción del anuncio</h2>
-        <p class="text-sm text-slate-400">
-          Completa los campos para que los usuarios conozcan mejor el anuncio.
-        </p>
-      </div>
-    </div>
-    <div
-      class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200/80">
-      Paso 3 de 4
-    </div>
-  </div>
 
-  <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
-    <header>
-      <h2 class="text-lg font-semibold text-slate-800">Información general</h2>
-      <p class="text-sm text-slate-500">Mejora el título y la descripción para destacar tu anuncio.</p>
-    </header>
-
-    @let tituloControl = controles.titulo;
-    @let descripcionControl = controles.descripcion;
-
-    <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-      Título
-      <input type="text" formControlName="titulo" placeholder="Escribe un título atractivo"
-        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-      <span class="ml-auto text-xs font-normal text-slate-400">{{ tituloControl.value?.length ?? 0 }}/120</span>
-      @if (tituloControl.touched && tituloControl.hasError('required')) {
-      <span class="text-xs font-normal text-rose-500">El título es obligatorio</span>
-      }
-    </label>
-
-    <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-      Descripción
-      <textarea formControlName="descripcion" rows="6"
-        placeholder="Describe las características, beneficios y condiciones del anuncio"
-        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"></textarea>
-      <span class="ml-auto text-xs font-normal text-slate-400">{{ descripcionControl.value?.length ?? 0 }}/2000</span>
-      @if (descripcionControl.touched && descripcionControl.hasError('required')) {
-      <span class="text-xs font-normal text-rose-500">La descripción es obligatoria</span>
-      }
-    </label>
-  </section>
-
-  <section class="space-y-6 rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm" formGroupName="attrs">
-    <header>
-      <h2 class="text-lg font-semibold text-slate-800">Detalles específicos</h2>
-      <p class="text-sm text-slate-500">
-        Completa los campos correspondientes según la categoría seleccionada.
-      </p>
-    </header>
-
-    <ng-container [ngSwitch]="currentCategoriaClave">
-      <div *ngSwitchCase="'VEHICULO'" class="grid gap-6 md:grid-cols-2">
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let marcaControl = attrsGroup.get('marca');
-          Marca
-          <input type="text" formControlName="marca" placeholder="Ej. Toyota"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (marcaControl?.touched && marcaControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">La marca es obligatoria.</span>
-          }
-          @if (marcaControl?.touched && marcaControl?.hasError('maxlength')) {
-            <span class="text-xs font-normal text-rose-500">Máximo 80 caracteres.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let modeloControl = attrsGroup.get('modelo');
-          Modelo
-          <input type="text" formControlName="modelo" placeholder="Ej. Corolla"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (modeloControl?.touched && modeloControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">El modelo es obligatorio.</span>
-          }
-          @if (modeloControl?.touched && modeloControl?.hasError('maxlength')) {
-            <span class="text-xs font-normal text-rose-500">Máximo 80 caracteres.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let anioControl = attrsGroup.get('anio');
-          Año
-          <input type="number" formControlName="anio" placeholder="2022"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (anioControl?.touched && anioControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">El año es obligatorio.</span>
-          }
-          @if (anioControl?.touched && (anioControl?.hasError('min') || anioControl?.hasError('max'))) {
-            <span class="text-xs font-normal text-rose-500">Ingresa un año válido.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let kilometrajeControl = attrsGroup.get('kilometraje');
-          Kilometraje
-          <input type="number" formControlName="kilometraje" placeholder="45000"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (kilometrajeControl?.touched && kilometrajeControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">El kilometraje es obligatorio.</span>
-          }
-          @if (kilometrajeControl?.touched && kilometrajeControl?.hasError('min')) {
-            <span class="text-xs font-normal text-rose-500">Debe ser un número positivo.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let transmisionControl = attrsGroup.get('transmision');
-          Transmisión
-          <select formControlName="transmision"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-            <option value="">Selecciona</option>
-            @for (transmision of transmisionOpciones; track transmision.value) {
-            <option [value]="transmision.value">{{ transmision.label }}</option>
-            }
-          </select>
-          @if (transmisionControl?.touched && transmisionControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Selecciona la transmisión.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let combustibleControl = attrsGroup.get('combustible');
-          Combustible
-          <select formControlName="combustible"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-            <option value="">Selecciona</option>
-            @for (combustible of combustibleOpciones; track combustible.value) {
-            <option [value]="combustible.value">{{ combustible.label }}</option>
-            }
-          </select>
-          @if (combustibleControl?.touched && combustibleControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Selecciona el tipo de combustible.</span>
-          }
-        </label>
-      </div>
-
-      <div *ngSwitchCase="'INMUEBLE'" class="grid gap-6 md:grid-cols-2">
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let tipoPropiedadControl = attrsGroup.get('tipoPropiedad');
-          Tipo de propiedad
-          <select formControlName="tipoPropiedad"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-            <option value="">Selecciona</option>
-            @for (tipo of tipoPropiedadOpciones; track tipo.value) {
-            <option [value]="tipo.value">{{ tipo.label }}</option>
-            }
-          </select>
-          @if (tipoPropiedadControl?.touched && tipoPropiedadControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Selecciona el tipo de propiedad.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let metrosCuadradosControl = attrsGroup.get('metrosCuadrados');
-          Metros cuadrados
-          <input type="number" formControlName="metrosCuadrados" placeholder="120"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (metrosCuadradosControl?.touched && metrosCuadradosControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Indica los metros cuadrados.</span>
-          }
-          @if (metrosCuadradosControl?.touched && metrosCuadradosControl?.hasError('min')) {
-            <span class="text-xs font-normal text-rose-500">Debe ser mayor a 0.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let habitacionesControl = attrsGroup.get('habitaciones');
-          Habitaciones
-          <input type="number" formControlName="habitaciones" placeholder="3"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (habitacionesControl?.touched && habitacionesControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Indica la cantidad de habitaciones.</span>
-          }
-          @if (habitacionesControl?.touched && habitacionesControl?.hasError('min')) {
-            <span class="text-xs font-normal text-rose-500">No puede ser negativo.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let banosControl = attrsGroup.get('banos');
-          Baños
-          <input type="number" formControlName="banos" placeholder="2"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (banosControl?.touched && banosControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Indica la cantidad de baños.</span>
-          }
-          @if (banosControl?.touched && banosControl?.hasError('min')) {
-            <span class="text-xs font-normal text-rose-500">No puede ser negativo.</span>
-          }
-        </label>
-        <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
-          <input type="checkbox" formControlName="amoblado"
-            class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
-          Propiedad amoblada
-        </label>
-      </div>
-
-      <div *ngSwitchCase="'EMPLEO'" class="grid gap-6 md:grid-cols-2">
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let cargoControl = attrsGroup.get('cargo');
-          Cargo
-          <input type="text" formControlName="cargo" placeholder="Ej. Desarrollador Frontend"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (cargoControl?.touched && cargoControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">El cargo es obligatorio.</span>
-          }
-          @if (cargoControl?.touched && cargoControl?.hasError('maxlength')) {
-            <span class="text-xs font-normal text-rose-500">Máximo 120 caracteres.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let tipoContratoControl = attrsGroup.get('tipoContrato');
-          Tipo de contrato
-          <select formControlName="tipoContrato"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-            <option value="">Selecciona</option>
-            @for (tipo of tipoContratoOpciones; track tipo.value) {
-            <option [value]="tipo.value">{{ tipo.label }}</option>
-            }
-          </select>
-          @if (tipoContratoControl?.touched && tipoContratoControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Selecciona el tipo de contrato.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let salarioMinControl = attrsGroup.get('salarioMin');
-          Salario mínimo
-          <input type="number" formControlName="salarioMin" placeholder="4000"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (salarioMinControl?.touched && salarioMinControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Indica el salario mínimo.</span>
-          }
-          @if (salarioMinControl?.touched && salarioMinControl?.hasError('min')) {
-            <span class="text-xs font-normal text-rose-500">Debe ser mayor o igual a 0.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let salarioMaxControl = attrsGroup.get('salarioMax');
-          Salario máximo
-          <input type="number" formControlName="salarioMax" placeholder="8000"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (salarioMaxControl?.touched && salarioMaxControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Indica el salario máximo.</span>
-          }
-          @if (salarioMaxControl?.touched && salarioMaxControl?.hasError('min')) {
-            <span class="text-xs font-normal text-rose-500">Debe ser mayor o igual a 0.</span>
-          }
-          @if (salarioMaxControl?.touched && salarioMaxControl?.hasError('salarioInvalido')) {
-            <span class="text-xs font-normal text-rose-500">Debe ser mayor o igual al salario mínimo.</span>
-          }
-        </label>
-      </div>
-
-      <div *ngSwitchCase="'SERVICIO'" class="grid gap-6 md:grid-cols-2">
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let rubroControl = attrsGroup.get('rubro');
-          Rubro
-          <input type="text" formControlName="rubro" placeholder="Ej. Plomería, Marketing..."
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (rubroControl?.touched && rubroControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">El rubro es obligatorio.</span>
-          }
-          @if (rubroControl?.touched && rubroControl?.hasError('maxlength')) {
-            <span class="text-xs font-normal text-rose-500">Máximo 120 caracteres.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let experienciaControl = attrsGroup.get('experiencia');
-          Experiencia (años)
-          <input type="number" formControlName="experiencia" placeholder="5"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (experienciaControl?.touched && experienciaControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Indica los años de experiencia.</span>
-          }
-          @if (experienciaControl?.touched && experienciaControl?.hasError('min')) {
-            <span class="text-xs font-normal text-rose-500">Debe ser mayor o igual a 0.</span>
-          }
-        </label>
-      </div>
-
-      <div *ngSwitchCase="'MARKETPLACE'" class="grid gap-6 md:grid-cols-2">
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let condicionControl = attrsGroup.get('condicion');
-          Condición
-          <select formControlName="condicion"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-            <option value="">Selecciona</option>
-            @for (condicion of condicionOpciones; track condicion.value) {
-            <option [value]="condicion.value">{{ condicion.label }}</option>
-            }
-          </select>
-          @if (condicionControl?.touched && condicionControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">Selecciona la condición del producto.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let marcaMarketplaceControl = attrsGroup.get('marca');
-          Marca
-          <input type="text" formControlName="marca" placeholder="Ej. Samsung"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (marcaMarketplaceControl?.touched && marcaMarketplaceControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">La marca es obligatoria.</span>
-          }
-          @if (marcaMarketplaceControl?.touched && marcaMarketplaceControl?.hasError('maxlength')) {
-            <span class="text-xs font-normal text-rose-500">Máximo 80 caracteres.</span>
-          }
-        </label>
-        <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          @let modeloMarketplaceControl = attrsGroup.get('modelo');
-          Modelo
-          <input type="text" formControlName="modelo" placeholder="Ej. Galaxy S24"
-            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-          @if (modeloMarketplaceControl?.touched && modeloMarketplaceControl?.hasError('required')) {
-            <span class="text-xs font-normal text-rose-500">El modelo es obligatorio.</span>
-          }
-          @if (modeloMarketplaceControl?.touched && modeloMarketplaceControl?.hasError('maxlength')) {
-            <span class="text-xs font-normal text-rose-500">Máximo 80 caracteres.</span>
-          }
-        </label>
-      </div>
-    </ng-container>
-  </section>
-
-  <footer class="flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between">
-    <button type="button"
-      class="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:text-slate-500"
-      [routerLink]="['/administracion/anuncios/detalle', idAnuncio ?? '']">
-      <mat-icon class="text-base!">visibility</mat-icon>
-      Ver detalle
-    </button>
-
-    <button type="submit"
-      class="inline-flex h-11 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-400"
-      [disabled]="guardando">
-      <mat-icon class="text-base!">save</mat-icon>
-      {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
-    </button>
-  </footer>
-</form>
-}
+} -->

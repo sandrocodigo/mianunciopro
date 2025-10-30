@@ -21,6 +21,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AnuncioService } from '../../../servicios/anuncio.service';
 import { Anuncio } from '../../../modelos/anuncio';
 import { SpinnerService } from '../../../sistema/spinner/spinner.service';
+import { TituloService } from '../../../servicios/titulo.service';
 
 type AttrsFormGroup = FormGroup<{
   marca: FormControl<string | null>;
@@ -46,10 +47,11 @@ type AttrsFormGroup = FormGroup<{
 type DescripcionFormGroup = FormGroup<{
   titulo: FormControl<string | null>;
   descripcion: FormControl<string | null>;
+  urlAnuncio: FormControl<string | null>;
   attrs: AttrsFormGroup;
 }>;
 
-type CategoriaClave = 'VEHICULO' | 'INMUEBLE' | 'EMPLEO' | 'SERVICIO' | 'MARKETPLACE';
+type CategoriaClave = 'VEHICULOS' | 'INMUEBLES' | 'EMPLEOS' | 'SERVICIOS' | 'MARKETPLACE';
 
 @Component({
   selector: 'app-anuncio-descripcion',
@@ -67,6 +69,7 @@ type CategoriaClave = 'VEHICULO' | 'INMUEBLE' | 'EMPLEO' | 'SERVICIO' | 'MARKETP
   styleUrl: './anuncio-descripcion.css',
 })
 export class AnuncioDescripcion implements OnInit {
+
   readonly transmisionOpciones = [
     { value: 'MANUAL', label: 'Manual' },
     { value: 'AUTOMATICA', label: 'Automática' },
@@ -100,10 +103,10 @@ export class AnuncioDescripcion implements OnInit {
   ];
 
   readonly categoriaLabels: Record<CategoriaClave, string> = {
-    VEHICULO: 'Vehículo',
-    INMUEBLE: 'Inmueble',
-    EMPLEO: 'Empleo',
-    SERVICIO: 'Servicio',
+    VEHICULOS: 'Vehículos',
+    INMUEBLES: 'Inmuebles',
+    EMPLEOS: 'Empleos',
+    SERVICIOS: 'Servicios',
     MARKETPLACE: 'Marketplace',
   };
 
@@ -125,8 +128,10 @@ export class AnuncioDescripcion implements OnInit {
     private readonly snackbar: MatSnackBar,
     private readonly router: Router,
     private readonly title: Title,
+    private tituloServicio: TituloService
   ) {
     this.form = this.crearFormulario();
+    this.establecerSuscripcion();
   }
 
   get controles(): DescripcionFormGroup['controls'] {
@@ -187,7 +192,7 @@ export class AnuncioDescripcion implements OnInit {
       return;
     }
 
-    const { titulo, descripcion } = this.form.getRawValue();
+    const { titulo, descripcion, urlAnuncio } = this.form.getRawValue();
     const attrs = this.extraerAttrsPorCategoria(this.currentCategoriaClave);
 
     this.guardando = true;
@@ -196,10 +201,11 @@ export class AnuncioDescripcion implements OnInit {
       await this.anuncioServicio.actualizar(this.idAnuncio, {
         titulo: titulo ?? '',
         descripcion: descripcion ?? '',
+        urlAnuncio: urlAnuncio ?? '',
         attrs,
       });
       this.snackbar.open('Descripción actualizada con éxito.', 'OK', { duration: 8000 });
-      await this.router.navigate(['/administracion/anuncios/detalle', this.idAnuncio]);
+      await this.router.navigate(['/administracion/anuncios/imagenes', this.idAnuncio]);
     } catch (error) {
       console.error('Error al actualizar descripción', error);
       this.snackbar.open('No pudimos guardar los cambios. Intenta nuevamente.', 'OK', {
@@ -252,7 +258,7 @@ export class AnuncioDescripcion implements OnInit {
     };
 
     switch (tipo) {
-      case 'VEHICULO':
+      case 'VEHICULOS':
         return {
           marca: raw.marca || undefined,
           modelo: raw.modelo || undefined,
@@ -261,7 +267,7 @@ export class AnuncioDescripcion implements OnInit {
           transmision: raw.transmision || undefined,
           combustible: raw.combustible || undefined,
         };
-      case 'INMUEBLE':
+      case 'INMUEBLES':
         return {
           tipoPropiedad: raw.tipoPropiedad || undefined,
           metrosCuadrados: toNumber(raw.metrosCuadrados),
@@ -269,14 +275,14 @@ export class AnuncioDescripcion implements OnInit {
           banos: toNumber(raw.banos),
           amoblado: raw.amoblado ?? undefined,
         };
-      case 'EMPLEO':
+      case 'EMPLEOS':
         return {
           cargo: raw.cargo || undefined,
           tipoContrato: raw.tipoContrato || undefined,
           salarioMin: toNumber(raw.salarioMin),
           salarioMax: toNumber(raw.salarioMax),
         };
-      case 'SERVICIO':
+      case 'SERVICIOS':
         return {
           rubro: raw.rubro || undefined,
           experiencia: toNumber(raw.experiencia),
@@ -307,18 +313,18 @@ export class AnuncioDescripcion implements OnInit {
       case 'VEHICULO':
       case 'VEHICULOS':
       case 'VEHICULO AUTOMOTOR':
-        return 'VEHICULO';
+        return 'VEHICULOS';
       case 'INMUEBLE':
       case 'INMUEBLES':
       case 'BIENES RAICES':
-        return 'INMUEBLE';
+        return 'INMUEBLES';
       case 'EMPLEO':
       case 'EMPLEOS':
       case 'TRABAJO':
-        return 'EMPLEO';
+        return 'EMPLEOS';
       case 'SERVICIO':
       case 'SERVICIOS':
-        return 'SERVICIO';
+        return 'SERVICIOS';
       case 'MARKETPLACE':
       case 'PRODUCTO':
       case 'PRODUCTOS':
@@ -336,6 +342,9 @@ export class AnuncioDescripcion implements OnInit {
       descripcion: this.fb.control<string | null>('', {
         validators: [Validators.required, Validators.maxLength(2000)],
       }),
+
+      urlAnuncio: this.fb.control<string | null>(''),
+
       attrs: this.fb.group({
         marca: this.fb.control<string | null>(''),
         modelo: this.fb.control<string | null>(''),
@@ -357,7 +366,34 @@ export class AnuncioDescripcion implements OnInit {
         condicion: this.fb.control<string | null>(''),
       }) as AttrsFormGroup,
     }) as DescripcionFormGroup;
+
+
   }
+
+  establecerSuscripcion() {
+
+    this.controles.titulo.valueChanges.subscribe((val: any) => {
+      this.crearUrl();
+    });
+
+    this.controles.descripcion.valueChanges.subscribe((val: any) => {
+      this.crearUrl();
+    });
+
+  }
+
+  crearUrl() {
+    const tutulo = this.controles.titulo.value || '';
+    const descripcion = this.controles.descripcion.value || '';
+    const urlAnuncio = this.tituloServicio.convertir(tutulo + ' ' + descripcion+ ' '+ this.idAnuncio);
+    //console.log('URL ANUNCIO:', urlAnuncio);
+
+    this.controles.urlAnuncio.setValue(urlAnuncio);
+
+
+    //this.r.tituloLink.setValue(codigo + '-' + descripcion);
+  }
+
 
   private configurarValidadoresPorCategoria(categoria: CategoriaClave | null): void {
     const attrs = this.attrsGroup;
@@ -381,7 +417,7 @@ export class AnuncioDescripcion implements OnInit {
     };
 
     switch (categoria) {
-      case 'VEHICULO': {
+      case 'VEHICULOS': {
         const anioMax = new Date().getFullYear() + 1;
         asignar('marca', [Validators.required, Validators.maxLength(80)]);
         asignar('modelo', [Validators.required, Validators.maxLength(80)]);
@@ -395,14 +431,14 @@ export class AnuncioDescripcion implements OnInit {
         asignar('combustible', [Validators.required]);
         break;
       }
-      case 'INMUEBLE': {
+      case 'INMUEBLES': {
         asignar('tipoPropiedad', [Validators.required]);
         asignar('metrosCuadrados', [Validators.required, Validators.min(1)]);
         asignar('habitaciones', [Validators.required, Validators.min(0)]);
         asignar('banos', [Validators.required, Validators.min(0)]);
         break;
       }
-      case 'EMPLEO': {
+      case 'EMPLEOS': {
         asignar('cargo', [Validators.required, Validators.maxLength(120)]);
         asignar('tipoContrato', [Validators.required]);
         asignar('salarioMin', [Validators.required, Validators.min(0)]);
@@ -411,7 +447,7 @@ export class AnuncioDescripcion implements OnInit {
         attrs.updateValueAndValidity({ emitEvent: false });
         break;
       }
-      case 'SERVICIO': {
+      case 'SERVICIOS': {
         asignar('rubro', [Validators.required, Validators.maxLength(120)]);
         asignar('experiencia', [Validators.required, Validators.min(0)]);
         break;
